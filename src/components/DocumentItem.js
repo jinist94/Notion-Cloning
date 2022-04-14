@@ -1,4 +1,6 @@
-export default function DocumentItem({ $target, initialState, onAdd, onRemove, onSelectDocument }) {
+import { push } from "../util/router.js";
+
+export default function DocumentItem({ $target, initialState, onAdd, onRemove }) {
   this.state = initialState;
 
   const $document = document.createElement("li");
@@ -30,7 +32,7 @@ export default function DocumentItem({ $target, initialState, onAdd, onRemove, o
       $document.appendChild($ul);
 
       this.state.documents.map((doc) => {
-        new DocumentItem({ $target: $ul, initialState: doc, onAdd, onRemove, onSelectDocument });
+        new DocumentItem({ $target: $ul, initialState: doc, onAdd, onRemove });
       });
     }
   };
@@ -51,7 +53,8 @@ export default function DocumentItem({ $target, initialState, onAdd, onRemove, o
       } else if (target.matches(".addBtn")) {
         onAdd(documentId);
       } else {
-        onSelectDocument(this.state);
+        console.log("push", documentId);
+        push(`/documents/${documentId}`);
       }
     }
   });

@@ -19,6 +19,14 @@ export const request = async (url, options) => {
   }
 };
 
+export const fetchGetDocuments = async () => {
+  return await request("/documents");
+};
+
+export const fetchGetDocument = async (documentId) => {
+  return await request(`/documents/${documentId}`);
+};
+
 export const fetchAddDocument = async (documentId) => {
   return await request(`/documents`, {
     method: "POST",
@@ -27,10 +35,6 @@ export const fetchAddDocument = async (documentId) => {
       parent: documentId,
     }),
   });
-};
-
-export const fetchGetdocument = async (documentId) => {
-  return await request(`/documents/${documentId}`);
 };
 
 export const fetchRemoveDocument = async (documentId) => {

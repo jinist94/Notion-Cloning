@@ -12,12 +12,15 @@ export default function Editor({ $target, initialState, onEditing }) {
   };
 
   this.render = () => {
-    const { title, content } = this.state;
+    if (this.state && this.state.id) {
+      console.log(this.state, "null인가?");
+      const { title, content } = this.state;
 
-    $editor.innerHTML = `
+      $editor.innerHTML = `
       <input class="editor-title" name="title" type="text" placeholder="제목을 입력해주세요." value="${title}">
       <textarea class="editor-content" name="content" placeholder="텍스트를 입력해주세요.">${content ? content : ""}</textarea>
     `;
+    }
   };
 
   this.render();

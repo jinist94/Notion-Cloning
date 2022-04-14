@@ -1,8 +1,9 @@
-import { fetchAddDocument, fetchRemoveDocument, fetchRootDocument, request } from "../util/api.js";
+import { fetchAddDocument, fetchGetDocuments, fetchRemoveDocument, fetchRootDocument } from "../util/api.js";
+import { push } from "../util/router.js";
 import AddDocumentButton from "./AddDocumentButton.js";
 import DocumentItem from "./DocumentItem.js";
 
-export default function DocumentList({ $target, initialState = [], onSelectDocument }) {
+export default function DocumentList({ $target, initialState = [] }) {
   const $documentList = document.createElement("div");
   const $ul = document.createElement("ul");
 
@@ -11,8 +12,8 @@ export default function DocumentList({ $target, initialState = [], onSelectDocum
 
   this.state = initialState;
 
-  this.setState = (nextState) => {
-    this.state = nextState;
+  this.setState = async () => {
+    this.state = await fetchGetDocuments();
     this.render();
   };
 
@@ -25,32 +26,27 @@ export default function DocumentList({ $target, initialState = [], onSelectDocum
         initialState: doc,
         onAdd: async (documentId) => {
           const newDoc = await fetchAddDocument(documentId);
-          onSelectDocument(newDoc);
-          fetchGetDocuments();
+          push(`/documents/${documentId}`);
+
+          this.setState();
         },
         onRemove: async (documentId) => {
           await fetchRemoveDocument(documentId);
-          fetchGetDocuments();
+          this.setState();
         },
-        onSelectDocument,
       });
     });
 
     new AddDocumentButton({
       $target: $ul,
       addRootDocument: async () => {
-        fetchRootDocument();
-        fetchGetDocuments();
+        await fetchRootDocument();
+        this.setState();
       },
     });
   };
 
   this.render();
 
-  const fetchGetDocuments = async () => {
-    const documents = await request("/documents");
-    this.setState(documents);
-  };
-
-  fetchGetDocuments();
+  this.setState();
 }
