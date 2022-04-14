@@ -1,4 +1,5 @@
-import { request } from "../util/api.js";
+import { fetchAddDocument, fetchRemoveDocument, fetchRootDocument, request } from "../util/api.js";
+import AddDocumentButton from "./AddDocumentButton.js";
 import DocumentItem from "./DocumentItem.js";
 
 export default function DocumentList({ $target, initialState = [], onSelectDocument }) {
@@ -22,8 +23,25 @@ export default function DocumentList({ $target, initialState = [], onSelectDocum
       new DocumentItem({
         $target: $ul,
         initialState: doc,
+        onAdd: async (documentId) => {
+          const newDoc = await fetchAddDocument(documentId);
+          onSelectDocument(newDoc);
+          fetchGetDocuments();
+        },
+        onRemove: async (documentId) => {
+          await fetchRemoveDocument(documentId);
+          fetchGetDocuments();
+        },
         onSelectDocument,
       });
+    });
+
+    new AddDocumentButton({
+      $target: $ul,
+      addRootDocument: async () => {
+        fetchRootDocument();
+        fetchGetDocuments();
+      },
     });
   };
 

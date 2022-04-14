@@ -36,3 +36,13 @@ export const fetchGetdocument = async (documentId) => {
 export const fetchRemoveDocument = async (documentId) => {
   await request(`/documents/${documentId}`, { method: "DELETE" });
 };
+
+export const fetchRootDocument = async () => {
+  await request("/documents", {
+    method: "POST",
+    body: JSON.stringify({
+      title: "제목 없음!",
+      parent: null,
+    }),
+  });
+};

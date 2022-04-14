@@ -1,4 +1,4 @@
-export default function DocumentItem({ $target, initialState, onSelectDocument }) {
+export default function DocumentItem({ $target, initialState, onAdd, onRemove, onSelectDocument }) {
   this.state = initialState;
 
   const $document = document.createElement("li");
@@ -30,7 +30,7 @@ export default function DocumentItem({ $target, initialState, onSelectDocument }
       $document.appendChild($ul);
 
       this.state.documents.map((doc) => {
-        new DocumentItem({ $target: $ul, initialState: doc, onSelectDocument });
+        new DocumentItem({ $target: $ul, initialState: doc, onAdd, onRemove, onSelectDocument });
       });
     }
   };
@@ -49,7 +49,7 @@ export default function DocumentItem({ $target, initialState, onSelectDocument }
       if (target.matches(".removeBtn")) {
         onRemove(documentId);
       } else if (target.matches(".addBtn")) {
-        onAdd();
+        onAdd(documentId);
       } else {
         onSelectDocument(this.state);
       }
