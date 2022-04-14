@@ -1,7 +1,7 @@
 import { request } from "../util/api.js";
 import DocumentItem from "./DocumentItem.js";
 
-export default function DocumentList({ $target, initialState = [] }) {
+export default function DocumentList({ $target, initialState = [], onSelectDocument }) {
   const $documentList = document.createElement("div");
   const $ul = document.createElement("ul");
 
@@ -22,6 +22,7 @@ export default function DocumentList({ $target, initialState = [] }) {
       new DocumentItem({
         $target: $ul,
         initialState: doc,
+        onSelectDocument,
       });
     });
   };

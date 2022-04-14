@@ -1,4 +1,4 @@
-export default function DocumentItem({ $target, initialState }) {
+export default function DocumentItem({ $target, initialState, onSelectDocument }) {
   this.state = initialState;
 
   const $document = document.createElement("li");
@@ -28,13 +28,10 @@ export default function DocumentItem({ $target, initialState }) {
     if (this.state.documents && this.state.documents.length > 0) {
       const $ul = document.createElement("ul");
       $document.appendChild($ul);
+
       this.state.documents.map((doc) => {
-        new DocumentItem({ $target: $ul, initialState: doc });
+        new DocumentItem({ $target: $ul, initialState: doc, onSelectDocument });
       });
-    } else {
-      const $ul = document.createElement("ul");
-      $document.appendChild($ul);
-      $ul.innerHTML = `<li>하위 페이지가 없습니다</li>`;
     }
   };
 
@@ -51,8 +48,8 @@ export default function DocumentItem({ $target, initialState }) {
 
       if (target.matches(".removeBtn")) {
         onRemove(documentId);
-      } else if (target.matches(".toggleBtn")) {
-        onToggle();
+      } else if (target.matches(".addBtn")) {
+        onAdd();
       } else {
         onSelectDocument(this.state);
       }
