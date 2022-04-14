@@ -1,14 +1,14 @@
+import EditorContainer from "./EditorContainer.js";
 import DocumentList from "./DocumentList.js";
-import Editor from "./Editor.js";
 
 export default function App({ $target }) {
   const onSelectDocument = async (doc) => {
-    editor.setState(doc);
+    editorContainer.setState(doc);
   };
 
   const documentList = new DocumentList({ $target, initialState: [], onSelectDocument });
 
-  const editor = new Editor({
+  const editorContainer = new EditorContainer({
     $target,
     initialState: {
       title: "",
