@@ -2,6 +2,9 @@
   display: flex;
 }
 
+.editor-container {
+  width: 100%;
+}
 .editor {
   padding: 10px;
 }
@@ -10,6 +13,7 @@
   width: 100%;
 }
 .editor .editor-content {
+  border: 1px solid #000;
   width: 100%;
   height: 600px;
 }

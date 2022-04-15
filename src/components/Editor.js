@@ -13,29 +13,38 @@ export default function Editor({ $target, initialState, onEditing }) {
 
   this.render = () => {
     if (this.state && this.state.id) {
-      console.log(this.state, "null인가?");
       const { title, content } = this.state;
 
       $editor.innerHTML = `
-      <input class="editor-title" name="title" type="text" placeholder="제목을 입력해주세요." value="${title}">
-      <textarea class="editor-content" name="content" placeholder="텍스트를 입력해주세요.">${content ? content : ""}</textarea>
-    `;
+      <input class="editor-title" name="title" type="text" placeholder="제목을 입력해주세요.">
+      <div class="editor-content" name="content" contentEditable placeholder="텍스트를 입력해주세요."></div>
+      `;
+
+      $editor.querySelector("[name=title]").value = title;
+      $editor.querySelector("[name=content]").innerHTML = content ? content : "";
     }
   };
 
   this.render();
-
-  $editor.addEventListener("keyup", (e) => {
-    const { target } = e;
-
-    const name = target.getAttribute("name");
-    if (this.state[name] !== undefined) {
+  if (this.state && this.state.id) {
+    $editor.querySelector("[name=title]").addEventListener("keyup", (e) => {
+      const { target } = e;
       const nextState = {
         ...this.state,
-        [name]: target.value,
+        title: target.value,
       };
 
       onEditing(nextState);
-    }
-  });
+    });
+
+    $editor.querySelector("[name=content]").addEventListener("input", (e) => {
+      const { target } = e;
+      const nextState = {
+        ...this.state,
+        content: target.innerHTML,
+      };
+
+      onEditing(nextState);
+    });
+  }
 }

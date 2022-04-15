@@ -9,12 +9,11 @@ export default function EditorContainer({ $target, initialState }) {
 
   this.state = initialState;
 
-  const documentLocalSaveKey = `$temp-document-${this.state.id}`;
+  let documentLocalSaveKey = `temp-document-${this.state.id}`;
   const documentData = getItem(documentLocalSaveKey, { id: "", title: "", content: "" });
 
   this.setState = (nextState) => {
-    console.log(nextState);
-
+    documentLocalSaveKey = `temp-document-${nextState.id}`;
     this.state = nextState;
     editor.setState(nextState);
   };
@@ -30,13 +29,14 @@ export default function EditorContainer({ $target, initialState }) {
       }
 
       timer = setTimeout(async () => {
+        console.log(documentLocalSaveKey, "key");
         setItem(documentLocalSaveKey, {
           ...document,
           tempSaveDate: new Date(),
         });
 
         await fetchEditDocument(document);
-        removeItem(documentLocalSaveKey);
+        removeItem(documentLocalSaveKey); // 서버에 제대로 저장이 되면 localstorage삭제
       }, 1000);
     },
   });
