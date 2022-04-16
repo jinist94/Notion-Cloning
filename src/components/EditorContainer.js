@@ -1,6 +1,7 @@
 import Editor from "./Editor.js";
 import { setItem, getItem, removeItem } from "../util/storage.js";
 import { fetchEditDocument } from "../util/api.js";
+import { changeTitle } from "../util/custom.js";
 
 export default function EditorContainer({ $target, initialState }) {
   const $container = document.createElement("div");
@@ -38,6 +39,7 @@ export default function EditorContainer({ $target, initialState }) {
 
         await fetchEditDocument(document);
         removeItem(documentLocalSaveKey); // 서버에 제대로 저장이 되면 localstorage삭제
+        changeTitle(document.title);
       }, 1000);
     },
   });

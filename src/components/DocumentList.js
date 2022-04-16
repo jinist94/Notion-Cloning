@@ -1,4 +1,5 @@
 import { fetchAddDocument, fetchGetDocuments, fetchRemoveDocument, fetchRootDocument } from "../util/api.js";
+import { inItchangeTitle } from "../util/custom.js";
 import { push } from "../util/router.js";
 import AddDocumentButton from "./AddDocumentButton.js";
 import DocumentItem from "./DocumentItem.js";
@@ -48,4 +49,8 @@ export default function DocumentList({ $target, initialState = [] }) {
   this.render();
 
   this.setState();
+
+  inItchangeTitle(() => {
+    this.setState();
+  });
 }
