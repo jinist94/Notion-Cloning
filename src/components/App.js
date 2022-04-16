@@ -30,7 +30,6 @@ export default function App({ $target }) {
     } else if (pathname.indexOf("/documents/") === 0) {
       const [, , documentId] = pathname.split("/");
       const document = await fetchGetDocument(documentId);
-      console.log(documentId);
       editorContainer.setState(document);
     }
   };

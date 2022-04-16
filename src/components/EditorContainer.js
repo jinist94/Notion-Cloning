@@ -13,6 +13,7 @@ export default function EditorContainer({ $target, initialState }) {
   const documentData = getItem(documentLocalSaveKey, { id: "", title: "", content: "" });
 
   this.setState = (nextState) => {
+    console.log(nextState, "editorState");
     documentLocalSaveKey = `temp-document-${nextState.id}`;
     this.state = nextState;
     editor.setState(nextState);
