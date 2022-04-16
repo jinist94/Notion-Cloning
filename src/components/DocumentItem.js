@@ -1,27 +1,39 @@
 import { push } from "../util/router.js";
+import { getItem, setItem } from "../util/storage.js";
 
 export default function DocumentItem({ $target, initialState, onAdd, onRemove }) {
   this.state = initialState;
+
+  let openData = getItem("Notion", null);
 
   const $document = document.createElement("li");
   $document.classList.add("document-item");
 
   $target.appendChild($document);
 
-  let isOpen = false;
+  let isOpen = openData[this.state.id] || false;
 
   this.setState = (nextState) => {
-    this.state = nextState;
-    console.log(this.state, "RootState");
+    if (nextState) {
+      this.state = nextState;
+      console.log(this.state, "RootState");
+    }
+
+    if (isOpen) {
+      setItem("Notion", { ...openData, [this.state.id]: true });
+      openData = getItem("Notion", null);
+    } else {
+      delete open[this.state.id];
+      setItem("Notion", openData);
+      openData = getItem("Notion", null);
+    }
     this.render();
   };
 
   const onToggle = () => {
-    console.log("click Toggle");
     isOpen = !isOpen;
-
     console.log(isOpen);
-    this.render();
+    this.setState();
   };
 
   this.render = () => {
@@ -37,7 +49,7 @@ export default function DocumentItem({ $target, initialState, onAdd, onRemove })
             
         </div>
     `;
-    if (isOpen) {
+    if (openData[this.state.id]) {
       if (this.state.documents && this.state.documents.length > 0) {
         const $ul = document.createElement("ul");
         $document.appendChild($ul);
@@ -69,11 +81,11 @@ export default function DocumentItem({ $target, initialState, onAdd, onRemove })
       if (target.matches(".removeBtn")) {
         onRemove(documentId);
       } else if (target.matches(".addBtn")) {
+        isOpen = true;
         onAdd(documentId);
       } else if (target.matches(".toggleBtn")) {
         onToggle();
       } else {
-        console.log("push", documentId);
         push(`/documents/${documentId}`);
       }
     }

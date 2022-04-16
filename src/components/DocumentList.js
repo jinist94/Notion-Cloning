@@ -25,13 +25,12 @@ export default function DocumentList({ $target, initialState = [] }) {
         $target: $ul,
         initialState: doc,
         onAdd: async (documentId) => {
-          const newDoc = await fetchAddDocument(documentId);
+          await fetchAddDocument(documentId);
           push(`/documents/${documentId}`);
-
           this.setState();
         },
-        onRemove: async (documentId) => {
-          await fetchRemoveDocument(documentId);
+        onRemove: async (document) => {
+          await fetchRemoveDocument(document);
           this.setState();
         },
       });
