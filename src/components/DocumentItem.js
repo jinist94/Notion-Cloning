@@ -8,9 +8,19 @@ export default function DocumentItem({ $target, initialState, onAdd, onRemove })
 
   $target.appendChild($document);
 
+  let isOpen = false;
+
   this.setState = (nextState) => {
     this.state = nextState;
     console.log(this.state, "RootState");
+    this.render();
+  };
+
+  const onToggle = () => {
+    console.log("click Toggle");
+    isOpen = !isOpen;
+
+    console.log(isOpen);
     this.render();
   };
 
@@ -20,20 +30,28 @@ export default function DocumentItem({ $target, initialState, onAdd, onRemove })
 
     $document.innerHTML = `
         <div class="document-item-inner">
+            <button class="toggleBtn"> ${isOpen ? "▼" : "▶"}</button>
             <span>${this.state.title}</span>
             <button class="addBtn"> + </button>
             <button class="removeBtn"> 삭제 </button>
             
         </div>
     `;
+    if (isOpen) {
+      if (this.state.documents && this.state.documents.length > 0) {
+        const $ul = document.createElement("ul");
+        $document.appendChild($ul);
 
-    if (this.state.documents && this.state.documents.length > 0) {
-      const $ul = document.createElement("ul");
-      $document.appendChild($ul);
+        this.state.documents.map((doc) => {
+          new DocumentItem({ $target: $ul, initialState: doc, onAdd, onRemove });
+        });
+      } else {
+        const $ul = document.createElement("ul");
+        $document.appendChild($ul);
+        $ul.innerHTML = `<li>하위 페이지가 없습니다</li>`;
+      }
 
-      this.state.documents.map((doc) => {
-        new DocumentItem({ $target: $ul, initialState: doc, onAdd, onRemove });
-      });
+      isOpen = true;
     }
   };
 
@@ -52,6 +70,8 @@ export default function DocumentItem({ $target, initialState, onAdd, onRemove })
         onRemove(documentId);
       } else if (target.matches(".addBtn")) {
         onAdd(documentId);
+      } else if (target.matches(".toggleBtn")) {
+        onToggle();
       } else {
         console.log("push", documentId);
         push(`/documents/${documentId}`);

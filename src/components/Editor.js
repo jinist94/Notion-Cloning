@@ -62,7 +62,6 @@ export default function Editor({ $target, initialState, onEditing }) {
     const { target } = e;
     if (e.target.matches(".child-document-link")) {
       const documentId = target.dataset.id;
-      console.log(target.dataset.id, "click");
       push(`/documents/${documentId}`);
     }
   });

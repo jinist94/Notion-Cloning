@@ -2,6 +2,10 @@
   display: flex;
 }
 
+.document-list {
+  width: 400px;
+}
+
 .editor-container {
   width: 100%;
 }
