@@ -2,10 +2,11 @@ import Editor from "./Editor.js";
 import { setItem, getItem, removeItem } from "../util/storage.js";
 import { fetchEditDocument } from "../util/api.js";
 import { changeTitle } from "../util/custom.js";
+import { createElement } from "../util/util.js";
 
 export default function EditorContainer({ $target, initialState }) {
-  const $container = document.createElement("div");
-  $container.classList.add("editor-container");
+  const $container = createElement("div", "editor-container");
+
   $target.appendChild($container);
 
   this.state = initialState;
@@ -43,4 +44,18 @@ export default function EditorContainer({ $target, initialState }) {
       }, 1000);
     },
   });
+
+  this.init = () => {
+    if (documentData.tempSaveDate && documentData.tempSaveDate > this.state.updatedAt) {
+      if (confirm("저장되지 않은 임시 데이터가 있습니다. 불러올까요?")) {
+        this.setState({
+          ...this.state,
+          ...documentData,
+        });
+        return;
+      }
+    }
+  };
+
+  this.init();
 }

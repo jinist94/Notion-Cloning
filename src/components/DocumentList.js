@@ -1,15 +1,16 @@
+import AddDocumentButton from "./AddDocumentButton.js";
+import DocumentItem from "./DocumentItem.js";
 import { fetchAddDocument, fetchGetDocuments, fetchRemoveDocument, fetchRootDocument } from "../util/api.js";
 import { inItchangeTitle } from "../util/custom.js";
 import { push } from "../util/router.js";
-import AddDocumentButton from "./AddDocumentButton.js";
-import DocumentItem from "./DocumentItem.js";
+import { createElement } from "../util/util.js";
 
 export default function DocumentList({ $target, initialState = [] }) {
-  const $documentList = document.createElement("div");
-  const $ul = document.createElement("ul");
+  const $documentList = createElement("div", "document-list");
+  const $ul = createElement("ul");
 
-  $documentList.classList.add("document-list");
   $target.appendChild($documentList);
+  $documentList.appendChild($ul);
 
   this.state = initialState;
 
@@ -19,8 +20,11 @@ export default function DocumentList({ $target, initialState = [] }) {
   };
 
   this.render = () => {
-    $documentList.appendChild($ul);
     $ul.innerHTML = "";
+    if (this.state.length === 0) {
+      $ul.innerHTML = "<p>새로운 페이지를 추가해주세요!</p>";
+      return;
+    }
     this.state.map((doc) => {
       new DocumentItem({
         $target: $ul,
@@ -36,21 +40,19 @@ export default function DocumentList({ $target, initialState = [] }) {
         },
       });
     });
-
-    new AddDocumentButton({
-      $target: $ul,
-      addRootDocument: async () => {
-        await fetchRootDocument();
-        this.setState();
-      },
-    });
   };
 
-  this.render();
-
-  this.setState();
+  new AddDocumentButton({
+    $target: $documentList,
+    addRootDocument: async () => {
+      await fetchRootDocument();
+      this.setState();
+    },
+  });
 
   inItchangeTitle(() => {
     this.setState();
   });
+
+  this.setState();
 }

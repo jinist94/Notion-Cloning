@@ -1,17 +1,26 @@
 import { push } from "../util/router.js";
 import { getItem, setItem } from "../util/storage.js";
+import { createElement, findDocumentId } from "../util/util.js";
 
 export default function DocumentItem({ $target, initialState, onAdd, onRemove }) {
   this.state = initialState;
 
-  let openData = getItem("Notion", null);
-
-  const $document = document.createElement("li");
-  $document.classList.add("document-item");
-
+  const $document = createElement("li", "document-item");
   $target.appendChild($document);
 
-  let isOpen = openData[this.state.id] || false;
+  let openData = getItem("open-data", null);
+  let isOpen = (openData && openData[this.state.id]) || false;
+
+  const removeOpenId = (openData) => {
+    delete openData[this.state.id];
+    setItem("open-data", openData);
+    openData = getItem("open-data", null);
+  };
+
+  const addOpenId = (openData) => {
+    setItem("open-data", { ...openData, [this.state.id]: true });
+    openData = getItem("open-data", null);
+  };
 
   this.setState = (nextState) => {
     if (nextState) {
@@ -19,21 +28,12 @@ export default function DocumentItem({ $target, initialState, onAdd, onRemove })
       console.log(this.state, "RootState");
     }
 
-    if (isOpen) {
-      setItem("Notion", { ...openData, [this.state.id]: true });
-      openData = getItem("Notion", null);
-    } else {
-      delete open[this.state.id];
-      setItem("Notion", openData);
-      openData = getItem("Notion", null);
-    }
-    this.render();
-  };
+    openData = getItem("open-data", null);
 
-  const onToggle = () => {
-    isOpen = !isOpen;
-    console.log(isOpen);
-    this.setState();
+    console.log(this.state.id, "thisstate");
+    isOpen ? addOpenId(openData) : removeOpenId(openData);
+
+    this.render();
   };
 
   this.render = () => {
@@ -43,22 +43,21 @@ export default function DocumentItem({ $target, initialState, onAdd, onRemove })
     $document.innerHTML = `
         <div class="document-item-inner">
             <button class="toggleBtn"> ${isOpen ? "▼" : "▶"}</button>
-            <span>${this.state.title}</span>
+            <span>${this.state.title ? this.state.title : "제목 없음"}</span>
             <button class="addBtn"> + </button>
             <button class="removeBtn"> 삭제 </button>
-            
         </div>
     `;
-    if (openData[this.state.id]) {
+    if (isOpen) {
       if (this.state.documents && this.state.documents.length > 0) {
-        const $ul = document.createElement("ul");
+        const $ul = createElement("ul");
         $document.appendChild($ul);
 
         this.state.documents.map((doc) => {
           new DocumentItem({ $target: $ul, initialState: doc, onAdd, onRemove });
         });
       } else {
-        const $ul = document.createElement("ul");
+        const $ul = createElement("ul");
         $document.appendChild($ul);
         $ul.innerHTML = `<li>하위 페이지가 없습니다</li>`;
       }
@@ -79,12 +78,19 @@ export default function DocumentItem({ $target, initialState, onAdd, onRemove })
       const documentId = $li.dataset.id;
 
       if (target.matches(".removeBtn")) {
+        removeOpenId(openData);
+        const paramId = findDocumentId();
+
+        if (documentId === paramId) {
+          push("/");
+        }
         onRemove(documentId);
       } else if (target.matches(".addBtn")) {
-        isOpen = true;
+        addOpenId(openData);
         onAdd(documentId);
       } else if (target.matches(".toggleBtn")) {
-        onToggle();
+        isOpen = !isOpen;
+        this.setState();
       } else {
         push(`/documents/${documentId}`);
       }
