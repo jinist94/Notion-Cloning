@@ -1,5 +1,5 @@
 const API_END_POINT = "https://kdt-frontend.programmers.co.kr";
-const X_USERNAME = "jinist";
+export const X_USERNAME = "jinist";
 
 export const request = async (url, options) => {
   try {
