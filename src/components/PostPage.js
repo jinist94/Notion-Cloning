@@ -1,14 +1,14 @@
-import DocumentsHeader from "./DocumentsHeader.js";
-import DocumentItem from "./DocumentItem.js";
+import PostHeader from "./PostHeader.js";
+import PostList from "./PostList.js";
 import AddDocumentButton from "./AddDocumentButton.js";
 import { fetchAddDocument, fetchGetDocuments, fetchRemoveDocument, fetchRootDocument, X_USERNAME } from "../util/api.js";
 import { inItchangeTitle } from "../util/custom.js";
 import { push } from "../util/router.js";
 import { createElement } from "../util/util.js";
 
-export default function DocumentList({ $target, initialState = [] }) {
+export default function PostPage({ $target, initialState = [] }) {
   const $documentList = createElement("div", "document-list");
-  const $ul = createElement("ul");
+  const $ul = createElement("ul", "root-document-list");
 
   this.state = initialState;
 
@@ -20,7 +20,7 @@ export default function DocumentList({ $target, initialState = [] }) {
   this.init = () => {
     $target.appendChild($documentList);
 
-    new DocumentsHeader({
+    new PostHeader({
       $target: $documentList,
       title: X_USERNAME,
     });
@@ -45,7 +45,7 @@ export default function DocumentList({ $target, initialState = [] }) {
       return;
     }
     this.state.map((doc) => {
-      new DocumentItem({
+      new PostList({
         $target: $ul,
         initialState: doc,
         onAdd: async (documentId) => {

@@ -2,8 +2,10 @@ import { push } from "../util/router.js";
 import { getItem, setItem } from "../util/storage.js";
 import { createElement, findDocumentId } from "../util/util.js";
 
-export default function DocumentItem({ $target, initialState, onAdd, onRemove }) {
+export default function PostList({ $target, initialState, onAdd, onRemove, postDepth = 0 }) {
   this.state = initialState;
+
+  postDepth += 1;
 
   const $document = createElement("li", "document-item");
   $target.appendChild($document);
@@ -41,11 +43,16 @@ export default function DocumentItem({ $target, initialState, onAdd, onRemove })
     $document.dataset.id = this.state.id;
 
     $document.innerHTML = `
-        <div class="document-item-inner">
-            <button class="toggleBtn"> ${isOpen ? "▼" : "▶"}</button>
+        <div class="document-item-inner" style="padding-left:${postDepth * 10}px">
+            <div class="item-title">
+            ${postDepth < 3 ? `<button class="toggleBtn"> ${isOpen ? "▼" : "▶"}</button> ` : ""}
+            
             <span>${this.state.title ? this.state.title : "제목 없음"}</span>
-            <button class="addBtn"> + </button>
-            <button class="removeBtn"> 삭제 </button>
+            </div>
+            <div class="item-buttons">
+              ${postDepth < 3 ? `<button class="addBtn"> + </button> ` : ""}
+              <button class="removeBtn"> 삭제 </button>
+            </div>
         </div>
     `;
     if (isOpen) {
@@ -54,12 +61,13 @@ export default function DocumentItem({ $target, initialState, onAdd, onRemove })
         $document.appendChild($ul);
 
         this.state.documents.map((doc) => {
-          new DocumentItem({ $target: $ul, initialState: doc, onAdd, onRemove });
+          new PostList({ $target: $ul, initialState: doc, onAdd, onRemove, postDepth });
         });
       } else {
-        const $ul = createElement("ul");
-        $document.appendChild($ul);
-        $ul.innerHTML = `<li>하위 페이지가 없습니다</li>`;
+        const $p = createElement("p", "emptyMessage");
+        $document.appendChild($p);
+
+        $p.innerHTML = postDepth < 3 ? `하위 페이지가 없습니다` : "";
       }
 
       isOpen = true;

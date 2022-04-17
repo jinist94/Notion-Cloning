@@ -4,7 +4,7 @@ import { fetchEditDocument } from "../util/api.js";
 import { changeTitle } from "../util/custom.js";
 import { createElement } from "../util/util.js";
 
-export default function EditorContainer({ $target, initialState }) {
+export default function PostEditePage({ $target, initialState }) {
   const $container = createElement("div", "editor-container");
 
   $target.appendChild($container);

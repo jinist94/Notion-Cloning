@@ -1,6 +1,6 @@
 import { createElement } from "../util/util.js";
 
-export default function DocumentsHeader({ $target, title }) {
+export default function PostHeader({ $target, title }) {
   const $header = createElement("div", "header");
   $target.appendChild($header);
 

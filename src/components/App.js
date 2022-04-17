@@ -1,5 +1,5 @@
-import EditorContainer from "./EditorContainer.js";
-import DocumentList from "./DocumentList.js";
+import PostEditePage from "./PostEditePage.js";
+import PostPage from "./postPage.js";
 import { inItRouter, push } from "../util/router.js";
 import { fetchGetDocument } from "../util/api.js";
 
@@ -10,9 +10,12 @@ export default function App({ $target }) {
     content: "",
   };
 
-  const documentList = new DocumentList({ $target, initialState: [] });
+  const postPage = new PostPage({
+    $target,
+    initialState: [],
+  });
 
-  const editorContainer = new EditorContainer({
+  const postEditPage = new PostEditePage({
     $target,
     initialState: initialEditorState,
   });
@@ -21,7 +24,7 @@ export default function App({ $target }) {
     const { pathname } = window.location;
 
     if (pathname === "/") {
-      editorContainer.setState(initialEditorState);
+      postEditPage.setState(initialEditorState);
       return;
     }
     if (pathname.indexOf("/documents/") === 0) {
@@ -29,7 +32,7 @@ export default function App({ $target }) {
       const document = await fetchGetDocument(documentId);
 
       if (!document) return push("/");
-      editorContainer.setState(document);
+      postEditPage.setState(document);
     }
   };
 
