@@ -1,14 +1,14 @@
 import PostHeader from "./PostHeader.js";
 import PostList from "./PostList.js";
-import AddDocumentButton from "./AddDocumentButton.js";
+import AddPostButton from "./AddPostButton.js";
 import { fetchAddDocument, fetchGetDocuments, fetchRemoveDocument, fetchRootDocument, X_USERNAME } from "../util/api.js";
 import { inItchangeTitle } from "../util/custom.js";
 import { push } from "../util/router.js";
 import { createElement } from "../util/util.js";
 
 export default function PostPage({ $target, initialState = [] }) {
-  const $documentList = createElement("div", "document-list");
-  const $ul = createElement("ul", "root-document-list");
+  const $documentList = createElement("div", "sidebar");
+  const $ul = createElement("ul", "post__items");
 
   this.state = initialState;
 
@@ -27,7 +27,7 @@ export default function PostPage({ $target, initialState = [] }) {
 
     $documentList.appendChild($ul);
 
-    new AddDocumentButton({
+    new AddPostButton({
       $target: $documentList,
       addRootDocument: async () => {
         await fetchRootDocument();
@@ -41,7 +41,7 @@ export default function PostPage({ $target, initialState = [] }) {
   this.render = () => {
     $ul.innerHTML = "";
     if (this.state.length === 0) {
-      $ul.innerHTML = "<p>새로운 페이지를 추가해주세요!</p>";
+      $ul.innerHTML = `<p class="add-message">새로운 페이지를 추가해주세요!</p>`;
       return;
     }
     this.state.map((doc) => {

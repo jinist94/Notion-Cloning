@@ -7,7 +7,7 @@ export default function PostList({ $target, initialState, onAdd, onRemove, postD
 
   postDepth += 1;
 
-  const $document = createElement("li", "document-item");
+  const $document = createElement("li", "post__item");
   $target.appendChild($document);
 
   let openData = getItem("open-data", null);
@@ -42,16 +42,17 @@ export default function PostList({ $target, initialState, onAdd, onRemove, postD
     $document.innerHTML = "";
     $document.dataset.id = this.state.id;
 
+    const MAX_DEPTH = 5;
+    const POST_PADDING = postDepth * 10;
+
     $document.innerHTML = `
-        <div class="document-item-inner" style="padding-left:${postDepth * 10}px">
-            <div class="item-title">
-            ${postDepth < 3 ? `<button class="toggleBtn"> ${isOpen ? "▼" : "▶"}</button> ` : ""}
-            
-            <span>${this.state.title ? this.state.title : "제목 없음"}</span>
-            </div>
-            <div class="item-buttons">
-              ${postDepth < 3 ? `<button class="addBtn"> + </button> ` : ""}
-              <button class="removeBtn"> 삭제 </button>
+        <div class="item__content" style="padding-left:${postDepth === MAX_DEPTH ? POST_PADDING + 10 : POST_PADDING}px">
+            ${postDepth < MAX_DEPTH ? `<button class="item__button--toggle"> ${isOpen ? "▼" : "▶"}</button> ` : ""}
+            <div class="item__title">${this.state.title ? this.state.title : "제목 없음"}</div>
+
+            <div class="item__buttons">
+              <button class="item__button--remove"><i class="fa-solid fa-trash-can"></i> </button>
+              ${postDepth < MAX_DEPTH ? `<button class="item__button--add"><i class="fa-solid fa-plus"></i></button> ` : ""}
             </div>
         </div>
     `;
@@ -64,10 +65,13 @@ export default function PostList({ $target, initialState, onAdd, onRemove, postD
           new PostList({ $target: $ul, initialState: doc, onAdd, onRemove, postDepth });
         });
       } else {
-        const $p = createElement("p", "emptyMessage");
-        $document.appendChild($p);
+        if (postDepth < MAX_DEPTH) {
+          const $emptyMessage = createElement("div", "empty-post-message");
+          $document.appendChild($emptyMessage);
+          $emptyMessage.style.paddingLeft = `${POST_PADDING}px`;
 
-        $p.innerHTML = postDepth < 3 ? `하위 페이지가 없습니다` : "";
+          $emptyMessage.innerHTML = `<span>하위 페이지가 없습니다</span>`;
+        }
       }
 
       isOpen = true;
@@ -78,14 +82,14 @@ export default function PostList({ $target, initialState, onAdd, onRemove, postD
 
   $document.addEventListener("click", async (e) => {
     e.stopPropagation();
+    const clickElement = e.target.tagName === "I" ? e.target.closest("button") : e.target;
+    const $li = clickElement.closest(".post__item");
 
-    const { target } = e;
-    const $li = target.closest(".document-item");
-
+    console.log(clickElement);
     if ($li) {
       const documentId = $li.dataset.id;
 
-      if (target.matches(".removeBtn")) {
+      if (clickElement.className === "item__button--remove") {
         removeOpenId(openData);
         const paramId = findDocumentId();
 
@@ -93,10 +97,10 @@ export default function PostList({ $target, initialState, onAdd, onRemove, postD
           push("/");
         }
         onRemove(documentId);
-      } else if (target.matches(".addBtn")) {
+      } else if (clickElement.className === "item__button--add") {
         addOpenId(openData);
         onAdd(documentId);
-      } else if (target.matches(".toggleBtn")) {
+      } else if (clickElement.className === "item__button--toggle") {
         isOpen = !isOpen;
         this.setState();
       } else {

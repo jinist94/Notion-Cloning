@@ -1,7 +1,7 @@
 import { createElement } from "../util/util.js";
 
 export default function PostHeader({ $target, title }) {
-  const $header = createElement("div", "header");
+  const $header = createElement("div", "post__header");
   $target.appendChild($header);
 
   this.render = () => {
