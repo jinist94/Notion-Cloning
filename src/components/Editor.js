@@ -17,6 +17,7 @@ export default function Editor({ $target, initialState, onEditing }) {
     }
 
     this.state = nextState;
+
     this.init();
     this.render();
   };
@@ -25,8 +26,10 @@ export default function Editor({ $target, initialState, onEditing }) {
     $editor.innerHTML = `
     ${
       this.state.id
-        ? `<input class="editor-title" name="title" type="text" placeholder="제목 없음">
-    <div class="editor-content" name="content" contentEditable placeholder="텍스트를 입력해주세요."></div>`
+        ? `<input class="editor__title" name="title" type="text" placeholder="제목 없음">
+          <div class="editor__content" name="content" contentEditable placeholder="텍스트를 입력해주세요."></div>
+          <div class="editor__child-documents"></div>
+          `
         : "<div>선택된 document가 없습니다</div>"
     }
     `;
@@ -40,16 +43,20 @@ export default function Editor({ $target, initialState, onEditing }) {
     if (this.state && this.state.id) {
       const { title, content } = this.state;
 
-      console.log($editor);
+      console.log(content, "content");
       $editor.querySelector("[name=title]").value = title;
-      $editor.querySelector("[name=content]").innerHTML = content ? content : "";
+      $editor.querySelector("[name=content]").innerHTML = content ? content : `<div><br></div>`;
 
       if (this.state.documents) {
-        const $childDocuments = createElement("div");
+        const $childDocuments = $editor.querySelector(".editor__child-documents");
+        console.log($childDocuments);
         $childDocuments.innerHTML = this.state.documents
-          .map((doc) => `<div data-id=${doc.id} class="child-document-link">${doc.title}</div>`)
+          .map(
+            (doc) =>
+              `<div data-id=${doc.id} class="editor__child-document" contentEditable="false"><i class="fa-solid fa-file-lines"></i><span>${doc.title}</span></div>`
+          )
           .join("");
-        $editor.querySelector("[name=content]").appendChild($childDocuments);
+        $editor.appendChild($childDocuments);
       }
     }
   };
@@ -69,19 +76,64 @@ export default function Editor({ $target, initialState, onEditing }) {
       onEditing(nextState);
     });
 
-    $content.addEventListener("input", (e) => {
-      const { target } = e;
+    $content.addEventListener("keyup", (e) => {
+      const selection = window.getSelection();
+      const node = selection.anchorNode;
+      const parentNode = node.parentNode;
+      const text = node.textContent;
+      console.log(selection);
+
       const nextState = {
         ...this.state,
-        content: target.innerHTML,
+        content: e.target.innerHTML,
       };
+
+      if (e.isComposing) {
+        onEditing(nextState);
+        return;
+      }
+
+      const newTag = EditorShortcut(text);
+      if (parentNode.nodeName === "DIV") {
+        if (newTag) {
+          e.preventDefault();
+
+          parentNode.innerHTML = "";
+          parentNode.appendChild(newTag);
+
+          selection.selectAllChildren(newTag);
+          selection.collapseToEnd();
+        }
+      }
 
       onEditing(nextState);
     });
 
+    const EditorShortcut = (text) => {
+      let tag;
+      if (/^#\s/.test(text)) {
+        // #
+        tag = document.createElement("h1");
+        tag.innerText = text.substring(1);
+        return tag;
+      } else if (/^##\s/.test(text)) {
+        // ##
+        tag = document.createElement("h2");
+        tag.innerText = text.substring(2);
+        return tag;
+      } else if (/^###\s/.test(text)) {
+        // ###
+        tag = document.createElement("h3");
+        tag.innerText = text.substring(3);
+        return tag;
+      } else {
+        return false;
+      }
+    };
+
     $content.addEventListener("click", (e) => {
       const { target } = e;
-      if (e.target.matches(".child-document-link")) {
+      if (e.target.matches(".editor__child-document")) {
         const documentId = target.dataset.id;
         push(`/documents/${documentId}`);
       }
