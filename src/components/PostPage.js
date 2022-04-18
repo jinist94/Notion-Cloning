@@ -41,7 +41,7 @@ export default function PostPage({ $target, initialState = [] }) {
   this.render = () => {
     $ul.innerHTML = "";
     if (this.state.length === 0) {
-      $ul.innerHTML = `<p class="add-message">새로운 페이지를 추가해주세요!</p>`;
+      $ul.innerHTML = `<div class="empty-post-message"><span>새로운 페이지를 추가해주세요!</span></div>`;
       return;
     }
     this.state.map((doc) => {
