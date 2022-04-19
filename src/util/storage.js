@@ -1,6 +1,6 @@
 const storage = window.localStorage;
 
-export const SELECTED_DOCUMENT = "selectedDocument";
+export const SELECTED_DOCUMENT = "selected-document";
 export const OPEN_LIST = "open-list";
 
 export const getItem = (key, defaultValue) => {

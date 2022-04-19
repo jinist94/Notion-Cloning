@@ -2,7 +2,7 @@ import { push } from "../util/router.js";
 import { addOpenListId, getItem, OPEN_LIST, removeOpenListId, SELECTED_DOCUMENT, setItem } from "../util/storage.js";
 import { createElement, findDocumentId } from "../util/util.js";
 
-export default function PostList({ $target, initialState, onAdd, onRemove, postDepth = 0, onSelect }) {
+export default function PostList({ $target, initialState, onAdd, onRemove, onSelect }) {
   this.state = initialState;
 
   const $document = createElement("li", "post__item");
@@ -36,7 +36,7 @@ export default function PostList({ $target, initialState, onAdd, onRemove, postD
         <div class="item__content ${selected && selected.id == id ? "selected" : ""}"
           style="padding-left:${depth === MAX_DEPTH ? POST_PADDING + 10 : POST_PADDING}px">
             ${depth < MAX_DEPTH ? `<button class="item__button--toggle"> ${isOpen ? "▼" : "▶"}</button> ` : ""}
-            <div class="item__title">${title ? title : "제목 없음"} </div>
+            <div class="item__title"><span>${title ? title : "제목 없음"}</span></div>
             <div class="item__buttons">
               <button class="item__button--remove"><i class="fa-solid fa-trash-can"></i> </button>
               ${depth < MAX_DEPTH ? `<button class="item__button--add"><i class="fa-solid fa-plus"></i></button> ` : ""}

@@ -5,7 +5,6 @@ export const inItRouter = (callback) => {
     const { nextUrl } = e.detail;
     history.pushState(null, null, nextUrl);
     callback();
-    // url을 변경하고 route를 호출함으로써 페이지를 다시 그린다.
   });
 };
 

@@ -12,6 +12,7 @@ export default function Editor({ $target, initialState, onEditing }) {
       // innerHtml과 event를 다시 만들지 않는다.
       this.state = nextState;
       isRender && this.render();
+
       return;
     }
 
@@ -29,10 +30,7 @@ export default function Editor({ $target, initialState, onEditing }) {
       this.state.id
         ? `<input class="editor__title" name="title" type="text" placeholder="제목 없음">
           <div class="editor__content" name="content" contentEditable placeholder="텍스트를 입력해주세요."></div>
-          <div class="editor__child-documents"></div>
-          <input type="text"/>
-          <div class="editor__searchList"></div>
-          
+          <div class="editor__child-documents"></div> 
           `
         : ""
     }
@@ -41,13 +39,14 @@ export default function Editor({ $target, initialState, onEditing }) {
     if (this.state && this.state.id) {
       this.setEvent();
     }
+
+    this.render();
   };
 
   this.render = () => {
     if (this.state && this.state.id) {
       const { title, content } = this.state;
 
-      console.log(content, "content");
       $editor.querySelector(".editor__title").value = title;
       $editor.querySelector(".editor__content").innerHTML = content ? content : `<div><br></div>`;
 
@@ -102,13 +101,15 @@ export default function Editor({ $target, initialState, onEditing }) {
       const newTag = EditorShortcut(text);
       if (parentNode.nodeName === "DIV") {
         if (newTag) {
+          newTag.innerHTML = "<br>";
+
           e.preventDefault();
 
           parentNode.innerHTML = "";
           parentNode.appendChild(newTag);
 
           selection.selectAllChildren(newTag);
-          selection.collapseToEnd();
+          selection.collapseToStart();
         }
       }
 
@@ -128,5 +129,4 @@ export default function Editor({ $target, initialState, onEditing }) {
   };
 
   this.init();
-  this.render();
 }

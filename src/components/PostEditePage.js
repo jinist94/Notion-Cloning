@@ -1,7 +1,7 @@
 import Editor from "./Editor.js";
 import { fetchEditDocument } from "../util/api.js";
 import { changeTitle } from "../util/custom.js";
-import { createElement } from "../util/util.js";
+import { createElement, debounce } from "../util/util.js";
 
 export default function PostEditePage({ $target, initialState }) {
   const $container = createElement("div", "editor-container");
@@ -15,19 +15,13 @@ export default function PostEditePage({ $target, initialState }) {
     editor.setState(nextState);
   };
 
-  let timer = null;
-
   const editor = new Editor({
     $target: $container,
     initialState,
     onEditing: (document) => {
-      if (timer !== null) {
-        clearTimeout(timer);
-      }
-
-      timer = setTimeout(async () => {
+      debounce(async () => {
         await fetchEditDocument(document);
-        changeTitle(document.title);
+        changeTitle();
       }, 1000);
     },
   });
