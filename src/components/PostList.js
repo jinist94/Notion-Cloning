@@ -1,74 +1,59 @@
 import { push } from "../util/router.js";
-import { getItem, SELECTED_DOCUMENT, setItem } from "../util/storage.js";
+import { addOpenListId, getItem, OPEN_LIST, removeOpenListId, SELECTED_DOCUMENT, setItem } from "../util/storage.js";
 import { createElement, findDocumentId } from "../util/util.js";
 
 export default function PostList({ $target, initialState, onAdd, onRemove, postDepth = 0, onSelect }) {
   this.state = initialState;
 
-  postDepth += 1;
-
   const $document = createElement("li", "post__item");
   $target.appendChild($document);
 
-  let openData = getItem("open-data", null);
-  let isOpen = (openData && openData[this.state.id]) || false;
-
-  const removeOpenId = (openData) => {
-    delete openData[this.state.id];
-    setItem("open-data", openData);
-    openData = getItem("open-data", null);
-  };
-
-  const addOpenId = (openData) => {
-    setItem("open-data", { ...openData, [this.state.id]: true });
-    openData = getItem("open-data", null);
-  };
+  let openList = getItem(OPEN_LIST, null);
+  let isOpen = (openList && openList[this.state.id]) || false;
 
   this.setState = (nextState) => {
     if (nextState) {
       this.state = nextState;
-      console.log(this.state, "RootState");
     }
 
-    openData = getItem("open-data", null);
-
-    console.log(this.state.id, "thisstate");
-    isOpen ? addOpenId(openData) : removeOpenId(openData);
+    isOpen ? addOpenListId(this.state.id) : removeOpenListId(this.state.id);
 
     this.render();
   };
 
   this.render = () => {
+    const { id, title, depth, documents } = this.state;
+
     $document.innerHTML = "";
-    $document.dataset.id = this.state.id;
+    $document.dataset.id = id;
 
     const MAX_DEPTH = 5;
-    const POST_PADDING = postDepth * 10;
+    const POST_PADDING = depth * 10;
 
     const selected = getItem(SELECTED_DOCUMENT, null);
 
     $document.innerHTML = `
-        <div class="item__content ${selected && selected.id == this.state.id ? "selected" : ""}"
-          style="padding-left:${postDepth === MAX_DEPTH ? POST_PADDING + 10 : POST_PADDING}px">
-            ${postDepth < MAX_DEPTH ? `<button class="item__button--toggle"> ${isOpen ? "▼" : "▶"}</button> ` : ""}
-            <div class="item__title">${this.state.title ? this.state.title : "제목 없음"} </div>
+        <div class="item__content ${selected && selected.id == id ? "selected" : ""}"
+          style="padding-left:${depth === MAX_DEPTH ? POST_PADDING + 10 : POST_PADDING}px">
+            ${depth < MAX_DEPTH ? `<button class="item__button--toggle"> ${isOpen ? "▼" : "▶"}</button> ` : ""}
+            <div class="item__title">${title ? title : "제목 없음"} </div>
             <div class="item__buttons">
               <button class="item__button--remove"><i class="fa-solid fa-trash-can"></i> </button>
-              ${postDepth < MAX_DEPTH ? `<button class="item__button--add"><i class="fa-solid fa-plus"></i></button> ` : ""}
+              ${depth < MAX_DEPTH ? `<button class="item__button--add"><i class="fa-solid fa-plus"></i></button> ` : ""}
             </div>
         </div>
     `;
 
     if (isOpen) {
-      if (this.state.documents && this.state.documents.length > 0) {
+      if (documents && documents.length > 0) {
         const $ul = createElement("ul");
         $document.appendChild($ul);
 
-        this.state.documents.map((doc) => {
-          new PostList({ $target: $ul, initialState: doc, onAdd, onRemove, postDepth, onSelect });
+        documents.map((doc) => {
+          new PostList({ $target: $ul, initialState: { ...doc, depth: depth + 1 }, onAdd, onRemove, onSelect });
         });
       } else {
-        if (postDepth < MAX_DEPTH) {
+        if (depth < MAX_DEPTH) {
           const $emptyMessage = createElement("div", "empty-post-message");
           $document.appendChild($emptyMessage);
           $emptyMessage.style.paddingLeft = `${POST_PADDING}px`;
@@ -85,29 +70,35 @@ export default function PostList({ $target, initialState, onAdd, onRemove, postD
 
   $document.addEventListener("click", async (e) => {
     e.stopPropagation();
+
     const clickElement = e.target.tagName === "I" ? e.target.closest("button") : e.target;
     const $li = clickElement.closest(".post__item");
 
-    console.log(clickElement);
     if ($li) {
       const documentId = $li.dataset.id;
 
-      if (clickElement.className === "item__button--remove") {
-        removeOpenId(openData);
-        const paramId = findDocumentId();
+      switch (clickElement.className) {
+        case "item__button--remove":
+          removeOpenListId(documentId);
+          const paramId = findDocumentId();
 
-        if (documentId === paramId) {
-          push("/");
-        }
-        onRemove(documentId);
-      } else if (clickElement.className === "item__button--add") {
-        addOpenId(openData);
-        onAdd(documentId);
-      } else if (clickElement.className === "item__button--toggle") {
-        isOpen = !isOpen;
-        this.setState();
-      } else {
-        onSelect(documentId);
+          if (documentId === paramId) push("/");
+
+          onRemove(documentId);
+          break;
+
+        case "item__button--add":
+          addOpenListId(documentId);
+          onAdd(documentId);
+          break;
+
+        case "item__button--toggle":
+          isOpen = !isOpen;
+          this.setState();
+          break;
+
+        default:
+          onSelect(documentId);
       }
     }
   });

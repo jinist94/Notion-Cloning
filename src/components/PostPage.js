@@ -5,7 +5,7 @@ import { fetchAddDocument, fetchGetDocuments, fetchRemoveDocument, fetchRootDocu
 import { inItchangeTitle } from "../util/custom.js";
 import { push } from "../util/router.js";
 import { createElement } from "../util/util.js";
-import { getItem, SELECTED_DOCUMENT, setItem } from "../util/storage.js";
+import { SELECTED_DOCUMENT, setItem } from "../util/storage.js";
 
 export default function PostPage({ $target, initialState = [] }) {
   const $documentList = createElement("div", "sidebar");
@@ -36,6 +36,10 @@ export default function PostPage({ $target, initialState = [] }) {
       },
     });
 
+    inItchangeTitle(() => {
+      this.setState();
+    });
+
     this.setState();
   };
 
@@ -48,7 +52,7 @@ export default function PostPage({ $target, initialState = [] }) {
     this.state.map((doc) => {
       new PostList({
         $target: $ul,
-        initialState: { ...doc, isSelected: false },
+        initialState: { ...doc, depth: 1 },
         onAdd: async (documentId) => {
           const newDoc = await fetchAddDocument(documentId);
           setItem(SELECTED_DOCUMENT, { id: newDoc.id });
@@ -68,10 +72,6 @@ export default function PostPage({ $target, initialState = [] }) {
       });
     });
   };
-
-  inItchangeTitle(() => {
-    this.setState();
-  });
 
   this.init();
 }

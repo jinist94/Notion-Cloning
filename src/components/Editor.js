@@ -30,8 +30,11 @@ export default function Editor({ $target, initialState, onEditing }) {
         ? `<input class="editor__title" name="title" type="text" placeholder="제목 없음">
           <div class="editor__content" name="content" contentEditable placeholder="텍스트를 입력해주세요."></div>
           <div class="editor__child-documents"></div>
+          <input type="text"/>
+          <div class="editor__searchList"></div>
+          
           `
-        : "<div>선택된 document가 없습니다</div>"
+        : ""
     }
     `;
 
@@ -50,7 +53,6 @@ export default function Editor({ $target, initialState, onEditing }) {
 
       if (this.state.documents) {
         const $childDocuments = $editor.querySelector(".editor__child-documents");
-        console.log($childDocuments);
         $childDocuments.innerHTML = this.state.documents
           .map(
             (doc) =>

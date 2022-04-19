@@ -41,3 +41,22 @@ export const EditorShortcut = (text) => {
     return false;
   }
 };
+
+const returnSearchList = (documents, keyword, list) => {
+  documents.forEach((doc) => {
+    if (doc.title.startsWith(keyword)) {
+      list.push(doc);
+    }
+    if (doc.documents.length !== 0) {
+      search(doc.documents, keyword, list);
+    }
+  });
+};
+
+export const searchDocuments = (documents, keyword) => {
+  let list = [];
+
+  returnSearchList(documents, keyword, list);
+
+  return list;
+};

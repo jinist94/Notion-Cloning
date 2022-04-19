@@ -11,7 +11,7 @@ export default function App({ $target }) {
     content: "",
   };
 
-  const postPage = new PostPage({
+  new PostPage({
     $target,
     initialState: [],
   });
