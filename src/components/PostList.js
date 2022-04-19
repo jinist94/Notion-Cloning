@@ -2,7 +2,7 @@ import { push } from "../util/router.js";
 import { getItem, setItem } from "../util/storage.js";
 import { createElement, findDocumentId } from "../util/util.js";
 
-export default function PostList({ $target, initialState, onAdd, onRemove, postDepth = 0 }) {
+export default function PostList({ $target, initialState, onAdd, onRemove, postDepth = 0, onSelect }) {
   this.state = initialState;
 
   postDepth += 1;
@@ -45,24 +45,27 @@ export default function PostList({ $target, initialState, onAdd, onRemove, postD
     const MAX_DEPTH = 5;
     const POST_PADDING = postDepth * 10;
 
-    $document.innerHTML = `
-        <div class="item__content" style="padding-left:${postDepth === MAX_DEPTH ? POST_PADDING + 10 : POST_PADDING}px">
-            ${postDepth < MAX_DEPTH ? `<button class="item__button--toggle"> ${isOpen ? "▼" : "▶"}</button> ` : ""}
-            <div class="item__title">${this.state.title ? this.state.title : "제목 없음"}</div>
+    const selected = getItem("selectedDocument", null);
 
+    $document.innerHTML = `
+        <div class="item__content ${selected.id == this.state.id ? "selected" : ""}"
+          style="padding-left:${postDepth === MAX_DEPTH ? POST_PADDING + 10 : POST_PADDING}px">
+            ${postDepth < MAX_DEPTH ? `<button class="item__button--toggle"> ${isOpen ? "▼" : "▶"}</button> ` : ""}
+            <div class="item__title">${this.state.title ? this.state.title : "제목 없음"} </div>
             <div class="item__buttons">
               <button class="item__button--remove"><i class="fa-solid fa-trash-can"></i> </button>
               ${postDepth < MAX_DEPTH ? `<button class="item__button--add"><i class="fa-solid fa-plus"></i></button> ` : ""}
             </div>
         </div>
     `;
+
     if (isOpen) {
       if (this.state.documents && this.state.documents.length > 0) {
         const $ul = createElement("ul");
         $document.appendChild($ul);
 
         this.state.documents.map((doc) => {
-          new PostList({ $target: $ul, initialState: doc, onAdd, onRemove, postDepth });
+          new PostList({ $target: $ul, initialState: doc, onAdd, onRemove, postDepth, onSelect });
         });
       } else {
         if (postDepth < MAX_DEPTH) {
@@ -104,7 +107,7 @@ export default function PostList({ $target, initialState, onAdd, onRemove, postD
         isOpen = !isOpen;
         this.setState();
       } else {
-        push(`/documents/${documentId}`);
+        onSelect(documentId);
       }
     }
   });

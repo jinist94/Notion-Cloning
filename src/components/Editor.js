@@ -1,6 +1,5 @@
 import { push } from "../util/router.js";
-import { createElement } from "../util/util.js";
-
+import { createElement, EditorShortcut } from "../util/util.js";
 export default function Editor({ $target, initialState, onEditing }) {
   const $editor = createElement("div", "editor");
 
@@ -57,7 +56,7 @@ export default function Editor({ $target, initialState, onEditing }) {
             (doc) =>
               `<div data-id=${doc.id} class="editor__child-document" contentEditable="false">
                 <i class="fa-solid fa-file-lines"></i>
-                <span>${doc.title}</span>
+                <span>${doc.title ? doc.title : "제목 없음"}</span>
               </div>`
           )
           .join("");
@@ -114,28 +113,6 @@ export default function Editor({ $target, initialState, onEditing }) {
       this.setState(nextState, false);
       onEditing(nextState);
     });
-
-    const EditorShortcut = (text) => {
-      let tag;
-      if (/^#\s/.test(text)) {
-        // #
-        tag = document.createElement("h1");
-        tag.innerText = text.substring(1);
-        return tag;
-      } else if (/^##\s/.test(text)) {
-        // ##
-        tag = document.createElement("h2");
-        tag.innerText = text.substring(2);
-        return tag;
-      } else if (/^###\s/.test(text)) {
-        // ###
-        tag = document.createElement("h3");
-        tag.innerText = text.substring(3);
-        return tag;
-      } else {
-        return false;
-      }
-    };
 
     $childDocuments.addEventListener("click", (e) => {
       const { target } = e;
