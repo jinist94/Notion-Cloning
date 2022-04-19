@@ -5,7 +5,7 @@ import { fetchAddDocument, fetchGetDocuments, fetchRemoveDocument, fetchRootDocu
 import { inItchangeTitle } from "../util/custom.js";
 import { push } from "../util/router.js";
 import { createElement } from "../util/util.js";
-import { getItem, setItem } from "../util/storage.js";
+import { getItem, SELECTED_DOCUMENT, setItem } from "../util/storage.js";
 
 export default function PostPage({ $target, initialState = [] }) {
   const $documentList = createElement("div", "sidebar");
@@ -51,7 +51,7 @@ export default function PostPage({ $target, initialState = [] }) {
         initialState: { ...doc, isSelected: false },
         onAdd: async (documentId) => {
           const newDoc = await fetchAddDocument(documentId);
-          setItem("selectedDocument", { id: newDoc.id });
+          setItem(SELECTED_DOCUMENT, { id: newDoc.id });
           push(`/documents/${newDoc.id}`);
           this.setState();
         },
@@ -61,7 +61,7 @@ export default function PostPage({ $target, initialState = [] }) {
         },
         onSelect: (documentId) => {
           console.log("onselect");
-          setItem("selectedDocument", { id: documentId });
+          setItem(SELECTED_DOCUMENT, { id: documentId });
           push(`/documents/${documentId}`);
           this.setState();
         },

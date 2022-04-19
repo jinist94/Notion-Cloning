@@ -15,3 +15,5 @@ export const setItem = (key, value) => {
 export const removeItem = (key) => {
   storage.removeItem(key);
 };
+
+export const SELECTED_DOCUMENT = "selectedDocument";

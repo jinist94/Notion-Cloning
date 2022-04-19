@@ -2,6 +2,7 @@ import PostEditePage from "./PostEditePage.js";
 import PostPage from "./postPage.js";
 import { inItRouter, push } from "../util/router.js";
 import { fetchGetDocument } from "../util/api.js";
+import { SELECTED_DOCUMENT, setItem } from "../util/storage.js";
 
 export default function App({ $target }) {
   const initialEditorState = {
@@ -25,11 +26,13 @@ export default function App({ $target }) {
 
     if (pathname === "/") {
       postEditPage.setState(initialEditorState);
+      setItem(SELECTED_DOCUMENT, null);
       return;
     }
     if (pathname.indexOf("/documents/") === 0) {
       const [, , documentId] = pathname.split("/");
       const document = await fetchGetDocument(documentId);
+      setItem(SELECTED_DOCUMENT, null);
 
       if (!document) return push("/");
       postEditPage.setState(document);
