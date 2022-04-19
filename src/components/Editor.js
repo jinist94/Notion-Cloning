@@ -7,19 +7,21 @@ export default function Editor({ $target, initialState, onEditing }) {
   $target.appendChild($editor);
 
   this.state = initialState;
-  this.setState = (nextState) => {
+  this.setState = (nextState, isRender = true) => {
     if (this.state.id && nextState.id) {
       // 이전 state와 nextState 둘 다 id가 있는 상태라면
       // innerHtml과 event를 다시 만들지 않는다.
       this.state = nextState;
-      this.render();
+      isRender && this.render();
       return;
     }
 
     this.state = nextState;
 
-    this.init();
-    this.render();
+    if (isRender) {
+      this.init();
+      this.render();
+    }
   };
 
   this.init = () => {
@@ -44,8 +46,8 @@ export default function Editor({ $target, initialState, onEditing }) {
       const { title, content } = this.state;
 
       console.log(content, "content");
-      $editor.querySelector("[name=title]").value = title;
-      $editor.querySelector("[name=content]").innerHTML = content ? content : `<div><br></div>`;
+      $editor.querySelector(".editor__title").value = title;
+      $editor.querySelector(".editor__content").innerHTML = content ? content : `<div><br></div>`;
 
       if (this.state.documents) {
         const $childDocuments = $editor.querySelector(".editor__child-documents");
@@ -53,7 +55,10 @@ export default function Editor({ $target, initialState, onEditing }) {
         $childDocuments.innerHTML = this.state.documents
           .map(
             (doc) =>
-              `<div data-id=${doc.id} class="editor__child-document" contentEditable="false"><i class="fa-solid fa-file-lines"></i><span>${doc.title}</span></div>`
+              `<div data-id=${doc.id} class="editor__child-document" contentEditable="false">
+                <i class="fa-solid fa-file-lines"></i>
+                <span>${doc.title}</span>
+              </div>`
           )
           .join("");
         $editor.appendChild($childDocuments);
@@ -62,17 +67,18 @@ export default function Editor({ $target, initialState, onEditing }) {
   };
 
   this.setEvent = () => {
-    const $title = $editor.querySelector("[name=title]");
-    const $content = $editor.querySelector("[name=content]");
+    const $title = $editor.querySelector(".editor__title");
+    const $content = $editor.querySelector(".editor__content");
+    const $childDocuments = $editor.querySelector(".editor__child-documents");
 
     $title.addEventListener("keyup", (e) => {
-      console.log(e.target.value, "value");
       const { target } = e;
       const nextState = {
         ...this.state,
         title: target.value,
       };
 
+      this.setState(nextState, false);
       onEditing(nextState);
     });
 
@@ -81,7 +87,6 @@ export default function Editor({ $target, initialState, onEditing }) {
       const node = selection.anchorNode;
       const parentNode = node.parentNode;
       const text = node.textContent;
-      console.log(selection);
 
       const nextState = {
         ...this.state,
@@ -106,6 +111,7 @@ export default function Editor({ $target, initialState, onEditing }) {
         }
       }
 
+      this.setState(nextState, false);
       onEditing(nextState);
     });
 
@@ -131,10 +137,12 @@ export default function Editor({ $target, initialState, onEditing }) {
       }
     };
 
-    $content.addEventListener("click", (e) => {
+    $childDocuments.addEventListener("click", (e) => {
       const { target } = e;
-      if (e.target.matches(".editor__child-document")) {
-        const documentId = target.dataset.id;
+      const clickElement = target.closest(".editor__child-document");
+
+      if (clickElement) {
+        const documentId = clickElement.dataset.id;
         push(`/documents/${documentId}`);
       }
     });
