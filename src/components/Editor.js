@@ -44,11 +44,14 @@ export default function Editor({ $target, initialState, onEditing }) {
   };
 
   this.render = () => {
+    const $input = $editor.querySelector(".editor__title");
+    const $content = $editor.querySelector(".editor__content");
+
     if (this.state && this.state.id) {
       const { title, content } = this.state;
 
-      $editor.querySelector(".editor__title").value = title;
-      $editor.querySelector(".editor__content").innerHTML = content ? content : `<div><br></div>`;
+      $input.value = title;
+      $content.innerHTML = content ? content : `<div><br></div>`;
 
       if (this.state.documents) {
         const $childDocuments = $editor.querySelector(".editor__child-documents");
@@ -63,6 +66,10 @@ export default function Editor({ $target, initialState, onEditing }) {
           .join("");
         $editor.appendChild($childDocuments);
       }
+    }
+
+    if ($input && !this.state.title) {
+      $input.focus();
     }
   };
 
