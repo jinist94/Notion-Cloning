@@ -2,6 +2,8 @@
   --post-hover-bg: rgba(55, 53, 47, 0.08);
   --post-list-color: #939393;
   --post-light-color: rgba(55, 53, 47, 0.5);
+  --slide-transition: all ease 0.5s;
+  --slide-transform: translateX(-260px);
 }
 #app {
   height: 100%;
@@ -34,7 +36,7 @@ body {
   height: 100%;
 }
 
-/* Document */
+/* Post */
 
 .post__header {
   padding: 25px 0 15px;
@@ -51,11 +53,15 @@ body {
   background: rgb(247, 246, 243);
   font-size: 14px;
   height: 100%;
+  transition: var(--slide-transition);
+}
+
+.sidebar.hide {
+  transform: var(--slide-transform);
 }
 
 .post__item {
   width: 100%;
-  /* padding-left: 10px; */
   box-sizing: border-box;
   line-height: 24px;
   cursor: pointer;
@@ -130,6 +136,8 @@ body {
   font-size: 0.9rem;
 }
 
+.menu__button-close:hover,
+.menu__button-open:hover,
 .item__button--add:hover,
 .item__button--remove:hover,
 .item__button--toggle:hover {
@@ -176,18 +184,23 @@ body {
 
 /* Editor */
 
-.editor-container {
+.editor__container {
   width: 100%;
   padding: 0 50px 0 280px;
   box-sizing: border-box;
   height: 100vh;
+  transition: var(--slide-transition);
 }
+
+.editor__container.hide {
+  transform: var(--slide-transform);
+}
+
 .editor {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
-  min-width: 800px;
   padding: 10px;
   box-sizing: border-box;
 }
@@ -246,4 +259,36 @@ body {
   font-size: 1.1rem;
   display: flex;
   align-items: center;
+}
+
+/* 메뉴 버튼 */
+
+.menu__button-open {
+  position: absolute;
+  opacity: 0;
+  top: 21px;
+
+  width: 30px;
+  height: 30px;
+  border-radius: 3px;
+  transition: all ease 0.2s;
+}
+
+.editor__container.hide .menu__button-open {
+  opacity: 1;
+}
+
+.menu__button-close {
+  opacity: 1;
+  position: absolute;
+  right: 20px;
+  top: 21px;
+  color: #a19f9a;
+  border-radius: 3px;
+  width: 30px;
+  height: 30px;
+  transition: all ease 0.2s;
+}
+.sidebar.hide .menu__button-close {
+  opacity: 0;
 }

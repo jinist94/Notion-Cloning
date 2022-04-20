@@ -6,9 +6,10 @@ import { inItchangeTitle } from "../util/custom.js";
 import { push } from "../util/router.js";
 import { createElement } from "../util/util.js";
 import { SELECTED_DOCUMENT, setItem } from "../util/storage.js";
+import MenuButton from "./MenuButton.js";
 
 export default function PostPage({ $target, initialState = [] }) {
-  const $documentList = createElement("div", "sidebar");
+  const $sidebar = createElement("div", "sidebar");
   const $ul = createElement("ul", "post__items");
 
   this.state = initialState;
@@ -18,17 +19,28 @@ export default function PostPage({ $target, initialState = [] }) {
     postList.setState(this.state);
   };
 
-  $target.appendChild($documentList);
+  $target.appendChild($sidebar);
+
+  new MenuButton({
+    $target: $sidebar,
+    className: "menu__button-close",
+    iconClass: "fa-solid fa-angles-left",
+    onButtonClick: () => {
+      const $editorContainer = document.querySelector(".editor__container");
+      $sidebar.classList.add("hide");
+      $editorContainer.classList.add("hide");
+    },
+  });
 
   new PostHeader({
-    $target: $documentList,
+    $target: $sidebar,
     title: X_USERNAME,
   });
 
-  $documentList.appendChild($ul);
+  $sidebar.appendChild($ul);
 
   new AddPostButton({
-    $target: $documentList,
+    $target: $sidebar,
     addRootDocument: async () => {
       await fetchRootDocument();
       await this.setState();
