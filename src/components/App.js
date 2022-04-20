@@ -11,7 +11,7 @@ export default function App({ $target }) {
     content: "",
   };
 
-  new PostPage({
+  const postPage = new PostPage({
     $target,
     initialState: [],
   });
@@ -35,6 +35,10 @@ export default function App({ $target }) {
       setItem(SELECTED_DOCUMENT, { id: document.id });
 
       if (!document) return push("/");
+
+      // Editor의 하위 document클릭 시 select를 업데이트 시키기 위함.
+      postPage.setState();
+
       postEditPage.setState(document);
     }
   };

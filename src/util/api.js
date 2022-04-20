@@ -52,7 +52,6 @@ export const fetchRootDocument = async () => {
 };
 
 export const fetchEditDocument = async (document) => {
-  console.log(document);
   await request(`/documents/${document.id}`, {
     method: "PUT",
     body: JSON.stringify({

@@ -20,7 +20,7 @@ export const removeItem = (key) => {
 };
 
 export const removeOpenListId = (documentId) => {
-  let list = getItem(OPEN_LIST, null);
+  let list = getItem(OPEN_LIST, {});
   delete list[documentId];
   setItem(OPEN_LIST, list);
   list = getItem(OPEN_LIST, null);
@@ -28,7 +28,7 @@ export const removeOpenListId = (documentId) => {
 };
 
 export const addOpenListId = (documentId) => {
-  let list = getItem(OPEN_LIST, null);
+  let list = getItem(OPEN_LIST, {});
   setItem(OPEN_LIST, { ...list, [documentId]: true });
   list = getItem(OPEN_LIST, null);
 

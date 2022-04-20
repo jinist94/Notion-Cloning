@@ -212,6 +212,10 @@ body {
   box-sizing: border-box;
 }
 
+.editor__content:focus {
+  outline: 0;
+}
+
 .editor__content > div {
   margin: 10px 0;
 }
@@ -236,6 +240,7 @@ body {
 .editor__child-document span {
   border-bottom: 1px solid rgba(55, 53, 47, 0.16);
   margin-left: 5px;
+  padding-bottom: 2px;
 }
 .editor__child-document i {
   font-size: 1.1rem;

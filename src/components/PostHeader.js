@@ -6,7 +6,7 @@ export default function PostHeader({ $target, title }) {
 
   this.render = () => {
     $header.innerHTML = `
-        <h3>${title} 님의 Notion</h3>
+        <h3>📑 ${title}님의 Notion</h3>
     `;
   };
 
