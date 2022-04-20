@@ -15,65 +15,55 @@ export default function PostPage({ $target, initialState = [] }) {
 
   this.setState = async () => {
     this.state = await fetchGetDocuments();
-    this.render();
+    postList.setState(this.state);
   };
 
-  this.init = () => {
-    $target.appendChild($documentList);
+  $target.appendChild($documentList);
 
-    new PostHeader({
-      $target: $documentList,
-      title: X_USERNAME,
-    });
+  new PostHeader({
+    $target: $documentList,
+    title: X_USERNAME,
+  });
 
-    $documentList.appendChild($ul);
+  $documentList.appendChild($ul);
 
-    new AddPostButton({
-      $target: $documentList,
-      addRootDocument: async () => {
-        await fetchRootDocument();
-        this.setState();
-      },
-    });
+  new AddPostButton({
+    $target: $documentList,
+    addRootDocument: async () => {
+      await fetchRootDocument();
+      await this.setState();
 
-    inItchangeTitle(() => {
+      const newDocId = this.state[this.state.length - 1].id;
+
+      setItem(SELECTED_DOCUMENT, { id: newDocId });
+      push(`/documents/${newDocId}`);
+    },
+  });
+
+  const postList = new PostList({
+    $target: $ul,
+    initialState: this.state,
+    onAdd: async (documentId) => {
+      const newDoc = await fetchAddDocument(documentId);
+
+      setItem(SELECTED_DOCUMENT, { id: newDoc.id });
+      push(`/documents/${newDoc.id}`);
       this.setState();
-    });
+    },
+    onRemove: async (document) => {
+      await fetchRemoveDocument(document);
+      this.setState();
+    },
+    onSelect: (documentId) => {
+      setItem(SELECTED_DOCUMENT, { id: documentId });
+      push(`/documents/${documentId}`);
+      this.setState();
+    },
+  });
 
+  inItchangeTitle(() => {
     this.setState();
-  };
+  });
 
-  this.render = () => {
-    $ul.innerHTML = "";
-
-    if (this.state.length === 0) {
-      $ul.innerHTML = `<div class="empty-post-message"><span>새로운 페이지를 추가해주세요!</span></div>`;
-      return;
-    }
-
-    this.state.map((doc) => {
-      new PostList({
-        $target: $ul,
-        initialState: { ...doc, depth: 1 },
-        onAdd: async (documentId) => {
-          const newDoc = await fetchAddDocument(documentId);
-          setItem(SELECTED_DOCUMENT, { id: newDoc.id });
-          push(`/documents/${newDoc.id}`);
-          this.setState();
-        },
-        onRemove: async (document) => {
-          await fetchRemoveDocument(document);
-          this.setState();
-        },
-        onSelect: (documentId) => {
-          console.log("onselect");
-          setItem(SELECTED_DOCUMENT, { id: documentId });
-          push(`/documents/${documentId}`);
-          this.setState();
-        },
-      });
-    });
-  };
-
-  this.init();
+  this.setState();
 }
