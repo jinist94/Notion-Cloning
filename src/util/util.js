@@ -18,27 +18,23 @@ export const findDocumentId = () => {
   }
 };
 
+const shortcutMap = [
+  { regex: /^#\s/, tagName: "h1" },
+  { regex: /^##\s/, tagName: "h2" },
+  { regex: /^###\s/, tagName: "h3" },
+];
+
 export const EditorShortcut = (text) => {
   let tag;
 
   // text.indexOf("# ")사용 시 버벅임 발생
 
-  if (/^#\s/.test(text)) {
-    // #
-    tag = document.createElement("h1");
-    tag.innerText = text.substring(1);
+  const shortcut = shortcutMap.find((item) => item.regex.test(text));
 
-    return tag;
-  } else if (/^##\s/.test(text)) {
-    // ##
-    tag = document.createElement("h2");
-    tag.innerText = text.substring(2);
-
-    return tag;
-  } else if (/^###\s/.test(text)) {
-    // ###
-    tag = document.createElement("h3");
-    tag.innerText = text.substring(3);
+  if (shortcut) {
+    const remove = text.length - 1;
+    tag = document.createElement(shortcut.tagName);
+    tag.innerText = text.substring(remove);
 
     return tag;
   } else {
