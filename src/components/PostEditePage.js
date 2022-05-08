@@ -30,11 +30,16 @@ export default function PostEditePage({ $target, initialState }) {
   const editor = new Editor({
     $target: $container,
     initialState,
-    onEditing: (document) => {
+    onEditContent: (document) => {
+      debounce(async () => {
+        await fetchEditDocument(document);
+      }, 1000);
+    },
+    onEditTitle: (document) => {
       debounce(async () => {
         await fetchEditDocument(document);
         changeTitle();
-      }, 1000);
-    },
+      }, 300);
+    }
   });
 }

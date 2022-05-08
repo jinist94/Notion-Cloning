@@ -1,6 +1,6 @@
 import { push } from "../util/router.js";
 import { createElement, EditorShortcut } from "../util/util.js";
-export default function Editor({ $target, initialState, onEditing }) {
+export default function Editor({ $target, initialState, onEditContent, onEditTitle }) {
   const $editor = createElement("div", "editor");
 
   $target.appendChild($editor);
@@ -86,7 +86,7 @@ export default function Editor({ $target, initialState, onEditing }) {
       };
 
       this.setState(nextState, false);
-      onEditing(nextState);
+      onEditTitle(nextState);
     });
 
     $content.addEventListener("keyup", (e) => {
@@ -101,7 +101,7 @@ export default function Editor({ $target, initialState, onEditing }) {
       };
 
       if (e.isComposing) {
-        onEditing(nextState);
+        onEditContent(nextState);
         return;
       }
 
@@ -121,7 +121,7 @@ export default function Editor({ $target, initialState, onEditing }) {
       }
 
       this.setState(nextState, false);
-      onEditing(nextState);
+      onEditContent(nextState);
     });
 
     $childDocuments.addEventListener("click", (e) => {
