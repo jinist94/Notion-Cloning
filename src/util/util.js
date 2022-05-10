@@ -1,13 +1,3 @@
-export const createElement = (tagName, className = "") => {
-  const element = document.createElement(tagName);
-
-  if (className) {
-    element.classList.add(className);
-  }
-
-  return element;
-};
-
 export const findDocumentId = () => {
   const { pathname } = window.location;
   if (pathname.indexOf("/documents/") === 0) {

@@ -1,8 +1,9 @@
 import Editor from "./Editor.js";
 import { fetchEditDocument } from "../util/api.js";
 import { changeTitle } from "../util/custom.js";
-import { createElement, debounce } from "../util/util.js";
+import { debounce } from "../util/util.js";
 import MenuButton from "./MenuButton.js";
+import { createElement, removeClass } from "../util/helper.js";
 
 export default function PostEditePage({ $target, initialState }) {
   const $container = createElement("div", "editor__container");
@@ -22,8 +23,8 @@ export default function PostEditePage({ $target, initialState }) {
     iconClass: "fa-solid fa-align-left",
     onButtonClick: () => {
       const $sidebar = document.querySelector(".sidebar");
-      $sidebar.classList.remove("hide");
-      $container.classList.remove("hide");
+      removeClass($sidebar, "hide");
+      removeClass($container, "hide");
     },
   });
 

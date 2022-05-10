@@ -1,12 +1,12 @@
 import PostHeader from "./PostHeader.js";
 import PostList from "./PostList.js";
 import AddPostButton from "./AddPostButton.js";
+import MenuButton from "./MenuButton.js";
 import { fetchAddDocument, fetchGetDocuments, fetchRemoveDocument, fetchRootDocument, X_USERNAME } from "../util/api.js";
 import { inItchangeTitle } from "../util/custom.js";
 import { push } from "../util/router.js";
-import { createElement } from "../util/util.js";
 import { SELECTED_DOCUMENT, setItem } from "../util/storage.js";
-import MenuButton from "./MenuButton.js";
+import { createElement, addClass } from "../util/helper.js";
 
 export default function PostPage({ $target, initialState = [] }) {
   const $sidebar = createElement("div", "sidebar");
@@ -27,8 +27,8 @@ export default function PostPage({ $target, initialState = [] }) {
     iconClass: "fa-solid fa-angles-left",
     onButtonClick: () => {
       const $editorContainer = document.querySelector(".editor__container");
-      $sidebar.classList.add("hide");
-      $editorContainer.classList.add("hide");
+      addClass($sidebar, "hide");
+      addClass($editorContainer, "hide");
     },
   });
 

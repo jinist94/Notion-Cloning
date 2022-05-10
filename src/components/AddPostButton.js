@@ -1,4 +1,4 @@
-import { createElement } from "../util/util.js";
+import { createElement } from "../util/helper.js";
 
 export default function AddDocumentButton({ $target, addRootDocument }) {
   const $button = createElement("button", "post__add-button");

@@ -1,4 +1,4 @@
-import { createElement } from "../util/util.js";
+import { createElement } from "../util/helper.js";
 
 export default function PostHeader({ $target, title }) {
   const $header = createElement("div", "post__header");

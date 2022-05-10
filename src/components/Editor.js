@@ -1,5 +1,6 @@
 import { push } from "../util/router.js";
-import { createElement, EditorShortcut } from "../util/util.js";
+import { EditorShortcut } from "../util/util.js";
+import { createElement } from "../util/helper.js";
 export default function Editor({ $target, initialState, onEditContent, onEditTitle }) {
   const $editor = createElement("div", "editor");
 

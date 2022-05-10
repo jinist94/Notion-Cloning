@@ -1,4 +1,4 @@
-import { createElement } from "../util/util.js";
+import { createElement } from "../util/helper.js";
 
 export default function MenuButton({ $target, className, iconClass, onButtonClick }) {
   const $button = createElement("button", className);

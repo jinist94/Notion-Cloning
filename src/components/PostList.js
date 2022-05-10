@@ -1,6 +1,7 @@
 import { push } from "../util/router.js";
 import { addOpenListId, getItem, OPEN_LIST, removeOpenListId, SELECTED_DOCUMENT, setItem } from "../util/storage.js";
-import { createElement, findDocumentId } from "../util/util.js";
+import { findDocumentId } from "../util/util.js";
+import { createElement } from "../util/helper.js";
 
 export default function PostList({ $target, initialState, onAdd, onRemove, onSelect }) {
   this.state = initialState;
