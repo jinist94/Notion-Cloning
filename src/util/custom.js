@@ -1,6 +1,6 @@
 const DOCUMENT_CHANGE_TITLE = "change-title";
 
-export const inItchangeTitle = (callback) => {
+export const watchTitleChange = (callback) => {
   window.addEventListener(DOCUMENT_CHANGE_TITLE, (e) => {
     callback();
   });

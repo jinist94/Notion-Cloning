@@ -21,7 +21,7 @@ export default function PostEditePage({ $target, initialState }) {
     $target: $container,
     className: "menu__button-open",
     iconClass: "fa-solid fa-align-left",
-    onButtonClick: () => {
+    onClickButton: () => {
       const $sidebar = document.querySelector(".sidebar");
       removeClass($sidebar, "hide");
       removeClass($container, "hide");
