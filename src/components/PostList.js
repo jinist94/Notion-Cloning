@@ -1,6 +1,6 @@
 import { push } from "../util/router.js";
 import { addOpenListId, getItem, OPEN_LIST, removeOpenListId, SELECTED_DOCUMENT, setItem } from "../util/storage.js";
-import { findDocumentId } from "../util/util.js";
+import { compareName, findDocumentId } from "../util/util.js";
 import { createElement } from "../util/helper.js";
 
 export default function PostList({ $target, initialState, onAdd, onRemove, onSelect }) {
@@ -45,7 +45,7 @@ export default function PostList({ $target, initialState, onAdd, onRemove, onSel
 
   const createPost = (documents, depth) => {
     const MAX_DEPTH = 5;
-    const POST_PADDING = depth * 10;
+    const POST_PADDING = depth * 10;Template literal
 
     const selected = getItem(SELECTED_DOCUMENT, null);
 
@@ -77,7 +77,7 @@ export default function PostList({ $target, initialState, onAdd, onRemove, onSel
   this.render();
 
   $document.addEventListener("click", async (e) => {
-    const clickElement = e.target.tagName === "I" ? e.target.closest("button") : e.target;
+    const clickElement = compareName(e.target.tagName, "I") ? e.target.closest("button") : e.target;
     const $li = clickElement.closest(".post__item");
 
     if ($li) {

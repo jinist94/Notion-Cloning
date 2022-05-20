@@ -1,5 +1,5 @@
 import { push } from "../util/router.js";
-import { EditorShortcut } from "../util/util.js";
+import { compareName, EditorShortcut } from "../util/util.js";
 import { createElement } from "../util/helper.js";
 export default function Editor({ $target, initialState, onEditContent, onEditTitle }) {
   const $editor = createElement("div", "editor");
@@ -107,7 +107,7 @@ export default function Editor({ $target, initialState, onEditContent, onEditTit
       }
 
       const newTag = EditorShortcut(text);
-      if (parentNode.nodeName === "DIV") {
+      if (compareName(parentNode.nodeName, "DIV")) {
         if (newTag) {
           newTag.innerHTML = "<br>";
 

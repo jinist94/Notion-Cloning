@@ -8,6 +8,13 @@ export const findDocumentId = () => {
   }
 };
 
+export const compareName = (name, text) => {
+  if(name === text){
+    return true;
+  }
+  return false;
+}
+
 const shortcutMap = [
   { regex: /^#\s/, tagName: "h1" },
   { regex: /^##\s/, tagName: "h2" },
