@@ -26,6 +26,23 @@ export default function PostList({ $target, initialState, onAdd, onRemove, onSel
     $document.innerHTML = createPost(this.state, 1);
   };
 
+  const toggleBtn = (isOpen) => {
+    return `<button class="item__button--toggle"> ${isOpen ? "▼" : "▶"}</button>`;
+  }
+
+  const AddDocumentBtn = () => {
+    return '<button class="item__button--add"><i class="fa-solid fa-plus"></i></button>';
+  }
+
+  const childDocuments = (documents, depth) => {
+    if(documents.length > 0){
+      return `<ul>${createPost(documents, depth + 1)}</ul>`;
+    } 
+    
+    return  `<ul><li class="empty-post-message"> <span>하위 페이지가 없습니다</span></li> <ul>`;
+  }
+
+
   const createPost = (documents, depth) => {
     const MAX_DEPTH = 5;
     const POST_PADDING = depth * 10;
@@ -36,24 +53,20 @@ export default function PostList({ $target, initialState, onAdd, onRemove, onSel
     ${documents
       .map(({ id, title, documents }) => {
         const isOpen = (openList && openList[id]) || false;
-
-        return `<li class="post__item" data-id="${id}">
-          <div class="item__content ${selected && selected.id == id ? "selected" : ""}"
-          style="padding-left:${depth === MAX_DEPTH ? POST_PADDING + 10 : POST_PADDING}px">
-            ${depth < MAX_DEPTH ? `<button class="item__button--toggle"> ${isOpen ? "▼" : "▶"}</button> ` : ""}
-            <div class="item__title">${title ? title : "제목 없음"}</div>
-            <div class="item__buttons">
-              <button class="item__button--remove"><i class="fa-solid fa-trash-can"></i> </button>
-              ${depth < MAX_DEPTH ? `<button class="item__button--add"><i class="fa-solid fa-plus"></i></button> ` : ""}
+        const paddingLeft = depth === MAX_DEPTH ? POST_PADDING + 10 : POST_PADDING;
+        const isSelected = selected && selected.id == id ? "selected" : "";
+ 
+        return `
+          <li class="post__item" data-id="${id}">
+            <div class="item__content ${isSelected}" style="padding-left:${paddingLeft}px">
+              ${depth < MAX_DEPTH ? toggleBtn(isOpen) : ""}
+              <div class="item__title">${title ? title : "제목 없음"}</div>
+              <div class="item__buttons">
+                <button class="item__button--remove"><i class="fa-solid fa-trash-can"></i> </button>
+                ${depth < MAX_DEPTH ? AddDocumentBtn() : ''}
+              </div>
             </div>
-          </div>
-          ${
-            isOpen
-              ? documents.length > 0
-                ? `<ul>${createPost(documents, depth + 1)}</ul>`
-                : `<ul><li class="empty-post-message"> <span>하위 페이지가 없습니다</span></li> <ul>`
-              : ""
-          }
+            ${isOpen ? childDocuments(documents, depth + 1) : "" }
           </li>
          `;
       })
