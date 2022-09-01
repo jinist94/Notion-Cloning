@@ -1,0 +1,34 @@
+{
+  "name": "notion-cloning",
+  "version": "1.0.0",
+  "description": "https://user-images.githubusercontent.com/81489300/164232988-79e687da-052d-4d01-9ecc-cb44dc2cfc75.mov",
+  "main": "index.js",
+  "scripts": {
+    "test": "yarn run cypress open",
+    "prod": "webpack serve --mode=production",
+    "dev": "webpack serve --mode=development",
+    "build": "webpack --mode=production"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jinist94/Notion-Cloning.git"
+  },
+  "author": "jinist",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jinist94/Notion-Cloning/issues"
+  },
+  "homepage": "https://github.com/jinist94/Notion-Cloning#readme",
+  "devDependencies": {
+    "@babel/core": "^7.18.13",
+    "@babel/eslint-parser": "^7.18.9",
+    "@babel/preset-env": "^7.18.10",
+    "babel-loader": "^8.2.5",
+    "css-loader": "^6.7.1",
+    "html-webpack-plugin": "^5.5.0",
+    "mini-css-extract-plugin": "^2.6.1",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0",
+    "webpack-dev-server": "^4.10.1"
+  }
+}
