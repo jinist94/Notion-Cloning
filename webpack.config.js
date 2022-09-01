@@ -10,12 +10,16 @@ module.exports = (_, argv) => {
     output: {
       filename: 'index.js',
       path: path.resolve(__dirname, 'public'),
+      publicPath: '/',
       // clean: true,
     },
     devServer: {
       static: './',
       port: 3000,
       hot: true,
+      historyApiFallback: {
+        index: '/index.html',
+      },
     },
     devtool: 'inline-source-map',
     module: {
