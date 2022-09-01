@@ -1,6 +1,8 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const webpack = require('webpack');
+const dotenv = require('dotenv').config();
 
 module.exports = (_, argv) => {
   const isDevelopment = argv.mode !== 'production';
@@ -43,8 +45,9 @@ module.exports = (_, argv) => {
       ],
     },
     plugins: [
-      new HtmlWebpackPlugin({ template: './index.html' }), //
+      new HtmlWebpackPlugin({ template: './index.html' }),
       new MiniCssExtractPlugin({ filename: 'style.css' }),
+      new webpack.EnvironmentPlugin(Object.keys(dotenv.parsed || {})),
     ],
     performance: {
       hints: false,

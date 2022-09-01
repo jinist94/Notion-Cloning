@@ -1,13 +1,13 @@
-const API_END_POINT = "https://kdt-frontend.programmers.co.kr";
-export const X_USERNAME = "jinist";
+const API_END_POINT = process.env.BASE_URL;
+export const X_USERNAME = 'jinist';
 
 export const request = async (url, options) => {
   try {
     const res = await fetch(`${API_END_POINT}${url}`, {
       ...options,
       headers: {
-        "x-username": X_USERNAME,
-        "Content-Type": "application/json",
+        'x-username': X_USERNAME,
+        'Content-Type': 'application/json',
       },
     });
 
@@ -20,7 +20,7 @@ export const request = async (url, options) => {
 };
 
 export const fetchGetDocuments = async () => {
-  return await request("/documents");
+  return await request('/documents');
 };
 
 export const fetchGetDocument = async (documentId) => {
@@ -29,7 +29,7 @@ export const fetchGetDocument = async (documentId) => {
 
 export const fetchAddDocument = async (documentId) => {
   return await request(`/documents`, {
-    method: "POST",
+    method: 'POST',
     body: JSON.stringify({
       title: null,
       parent: documentId,
@@ -38,12 +38,12 @@ export const fetchAddDocument = async (documentId) => {
 };
 
 export const fetchRemoveDocument = async (documentId) => {
-  await request(`/documents/${documentId}`, { method: "DELETE" });
+  await request(`/documents/${documentId}`, { method: 'DELETE' });
 };
 
 export const fetchRootDocument = async () => {
-  await request("/documents", {
-    method: "POST",
+  await request('/documents', {
+    method: 'POST',
     body: JSON.stringify({
       title: null,
       parent: null,
@@ -53,7 +53,7 @@ export const fetchRootDocument = async () => {
 
 export const fetchEditDocument = async (document) => {
   await request(`/documents/${document.id}`, {
-    method: "PUT",
+    method: 'PUT',
     body: JSON.stringify({
       title: document.title,
       content: document.content,
