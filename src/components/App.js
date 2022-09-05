@@ -1,5 +1,5 @@
 import PostEditePage from 'components/PostEditePage.js';
-import PostPage from 'components/postPage.js';
+import PostPage from 'components/PostPage.js';
 import { inItRouter, push } from 'util/router.js';
 import { fetchGetDocument } from 'util/api.js';
 import { OPEN_LIST, removeItem, SELECTED_DOCUMENT, setItem } from 'util/storage.js';
