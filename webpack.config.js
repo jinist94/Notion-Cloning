@@ -13,7 +13,7 @@ module.exports = (_, argv) => {
       filename: 'index.js',
       path: path.resolve(__dirname, 'public'),
       publicPath: '/',
-      clean: true,
+      // clean: true,
     },
     resolve: {
       alias: {
