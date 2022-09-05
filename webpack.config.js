@@ -47,14 +47,20 @@ module.exports = (_, argv) => {
         },
         {
           test: /\.css$/,
-          use: [MiniCssExtractPlugin.loader, 'css-loader'],
+          use: ['style-loader', 'css-loader'],
         },
       ],
     },
     plugins: [
       new HtmlWebpackPlugin({ template: './index.html' }),
       new MiniCssExtractPlugin({ filename: 'style.css' }),
-      new webpack.EnvironmentPlugin(Object.keys(dotenv.parsed || {})),
+      // new webpack.EnvironmentPlugin(Object.keys(dotenv.parsed || {})),
+      new webpack.DefinePlugin({
+        'process.env': JSON.stringify(dotenv.parsed),
+        'process.env.NODE_ENV': JSON.stringify(isDevelopment ? 'development' : 'production'),
+        'process.env.BASE_URL': JSON.stringify(process.env.BASE_URL),
+      }),
+      new webpack.EnvironmentPlugin(['BASE_URL']),
     ],
     performance: {
       hints: false,
