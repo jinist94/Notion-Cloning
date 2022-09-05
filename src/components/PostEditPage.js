@@ -5,7 +5,7 @@ import { debounce } from 'util/util.js';
 import MenuButton from './MenuButton.js';
 import { createElement, removeClass } from 'util/helper.js';
 
-export default function PostEditePage({ $target, initialState }) {
+export default function PostEditPage({ $target, initialState }) {
   const $container = createElement('div', 'editor__container');
 
   $target.appendChild($container);

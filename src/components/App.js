@@ -1,4 +1,4 @@
-import PostEditePage from 'components/PostEditePage.js';
+import PostEditPage from 'components/PostEditPage.js';
 import PostPage from 'components/PostPage.js';
 import { inItRouter, push } from 'util/router.js';
 import { fetchGetDocument } from 'util/api.js';
@@ -16,7 +16,7 @@ export default function App({ $target }) {
     initialState: [],
   });
 
-  const postEditPage = new PostEditePage({
+  const postEditPage = new PostEditPage({
     $target,
     initialState: initialEditorState,
   });
