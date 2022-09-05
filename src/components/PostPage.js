@@ -3,7 +3,7 @@ import PostList from './PostList.js';
 import AddPostButton from './AddPostButton.js';
 import MenuButton from './MenuButton.js';
 import { fetchAddDocument, fetchGetDocuments, fetchRemoveDocument, fetchRootDocument, X_USERNAME } from 'util/api.js';
-import { watchTitleChange } from 'util/custom.js';
+import { on, emit } from 'util/custom.js';
 import { push } from 'util/router.js';
 import { SELECTED_DOCUMENT, setItem } from 'util/storage.js';
 import { createElement, addClass } from 'util/helper.js';
@@ -62,8 +62,9 @@ export default function PostPage({ $target, initialState = [] }) {
       push(`/documents/${newDoc.id}`);
       this.setState();
     },
-    onRemove: async (document) => {
-      await fetchRemoveDocument(document);
+    onRemove: async (documentId) => {
+      await fetchRemoveDocument(documentId);
+      emit.removeChild(documentId);
       this.setState();
     },
     onSelect: (documentId) => {
@@ -73,7 +74,7 @@ export default function PostPage({ $target, initialState = [] }) {
     },
   });
 
-  watchTitleChange(() => {
+  on.changeTitle(() => {
     this.setState();
   });
 

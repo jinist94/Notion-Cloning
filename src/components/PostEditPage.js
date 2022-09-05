@@ -1,6 +1,6 @@
 import Editor from './Editor.js';
 import { fetchEditDocument } from 'util/api.js';
-import { changeTitle } from 'util/custom.js';
+import { emit } from 'util/custom.js';
 import { debounce } from 'util/util.js';
 import MenuButton from './MenuButton.js';
 import { createElement, removeClass } from 'util/helper.js';
@@ -39,7 +39,7 @@ export default function PostEditPage({ $target, initialState }) {
     onEditTitle: (document) => {
       debounce(async () => {
         await fetchEditDocument(document);
-        changeTitle();
+        emit.changeTitle();
       }, 300);
     },
   });

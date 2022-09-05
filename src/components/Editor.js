@@ -1,6 +1,7 @@
 import { push } from 'util/router.js';
 import { compareName, EditorShortcut } from 'util/util.js';
 import { createElement } from 'util/helper.js';
+import { on } from '../util/custom';
 export default function Editor({ $target, initialState, onEditContent, onEditTitle }) {
   const $editor = createElement('div', 'editor');
 
@@ -135,6 +136,11 @@ export default function Editor({ $target, initialState, onEditContent, onEditTit
       }
     });
   };
+
+  on.removeChild((id) => {
+    const documents = this.state.documents.filter((document) => Number(id) !== document.id);
+    this.setState({ ...this.state, documents }, true);
+  });
 
   this.init();
 }
