@@ -1,12 +1,12 @@
-import Editor from "./Editor.js";
-import { fetchEditDocument } from "../util/api.js";
-import { changeTitle } from "../util/custom.js";
-import { debounce } from "../util/util.js";
-import MenuButton from "./MenuButton.js";
-import { createElement, removeClass } from "../util/helper.js";
+import Editor from './Editor.js';
+import { fetchEditDocument } from 'util/api.js';
+import { changeTitle } from 'util/custom.js';
+import { debounce } from 'util/util.js';
+import MenuButton from './MenuButton.js';
+import { createElement, removeClass } from 'util/helper.js';
 
 export default function PostEditePage({ $target, initialState }) {
-  const $container = createElement("div", "editor__container");
+  const $container = createElement('div', 'editor__container');
 
   $target.appendChild($container);
 
@@ -19,12 +19,12 @@ export default function PostEditePage({ $target, initialState }) {
 
   new MenuButton({
     $target: $container,
-    className: "menu__button-open",
-    iconClass: "fa-solid fa-align-left",
+    className: 'menu__button-open',
+    iconClass: 'fa-solid fa-align-left',
     onClickButton: () => {
-      const $sidebar = document.querySelector(".sidebar");
-      removeClass($sidebar, "hide");
-      removeClass($container, "hide");
+      const $sidebar = document.querySelector('.sidebar');
+      removeClass($sidebar, 'hide');
+      removeClass($container, 'hide');
     },
   });
 
@@ -41,6 +41,6 @@ export default function PostEditePage({ $target, initialState }) {
         await fetchEditDocument(document);
         changeTitle();
       }, 300);
-    }
+    },
   });
 }

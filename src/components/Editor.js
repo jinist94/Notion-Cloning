@@ -1,8 +1,8 @@
-import { push } from "../util/router.js";
-import { compareName, EditorShortcut } from "../util/util.js";
-import { createElement } from "../util/helper.js";
+import { push } from 'util/router.js';
+import { compareName, EditorShortcut } from 'util/util.js';
+import { createElement } from 'util/helper.js';
 export default function Editor({ $target, initialState, onEditContent, onEditTitle }) {
-  const $editor = createElement("div", "editor");
+  const $editor = createElement('div', 'editor');
 
   $target.appendChild($editor);
 
@@ -33,7 +33,7 @@ export default function Editor({ $target, initialState, onEditContent, onEditTit
           <div class="editor__content" name="content" contentEditable placeholder="텍스트를 입력해주세요."></div>
           <div class="editor__child-documents"></div> 
           `
-        : ""
+        : ''
     }
     `;
 
@@ -45,8 +45,8 @@ export default function Editor({ $target, initialState, onEditContent, onEditTit
   };
 
   this.render = () => {
-    const $input = $editor.querySelector(".editor__title");
-    const $content = $editor.querySelector(".editor__content");
+    const $input = $editor.querySelector('.editor__title');
+    const $content = $editor.querySelector('.editor__content');
 
     if (this.state && this.state.id) {
       const { title, content } = this.state;
@@ -55,16 +55,16 @@ export default function Editor({ $target, initialState, onEditContent, onEditTit
       $content.innerHTML = content ? content : `<div><br></div>`;
 
       if (this.state.documents) {
-        const $childDocuments = $editor.querySelector(".editor__child-documents");
+        const $childDocuments = $editor.querySelector('.editor__child-documents');
         $childDocuments.innerHTML = this.state.documents
           .map(
             (doc) =>
               `<div data-id=${doc.id} class="editor__child-document" contentEditable="false">
                 <i class="fa-solid fa-file-lines"></i>
-                <span>${doc.title ? doc.title : "제목 없음"}</span>
+                <span>${doc.title ? doc.title : '제목 없음'}</span>
               </div>`
           )
-          .join("");
+          .join('');
         $editor.appendChild($childDocuments);
       }
     }
@@ -75,11 +75,11 @@ export default function Editor({ $target, initialState, onEditContent, onEditTit
   };
 
   this.setEvent = () => {
-    const $title = $editor.querySelector(".editor__title");
-    const $content = $editor.querySelector(".editor__content");
-    const $childDocuments = $editor.querySelector(".editor__child-documents");
+    const $title = $editor.querySelector('.editor__title');
+    const $content = $editor.querySelector('.editor__content');
+    const $childDocuments = $editor.querySelector('.editor__child-documents');
 
-    $title.addEventListener("keyup", (e) => {
+    $title.addEventListener('keyup', (e) => {
       const { target } = e;
       const nextState = {
         ...this.state,
@@ -90,7 +90,7 @@ export default function Editor({ $target, initialState, onEditContent, onEditTit
       onEditTitle(nextState);
     });
 
-    $content.addEventListener("keyup", (e) => {
+    $content.addEventListener('keyup', (e) => {
       const selection = window.getSelection();
       const node = selection.anchorNode;
       const parentNode = node.parentNode;
@@ -107,13 +107,13 @@ export default function Editor({ $target, initialState, onEditContent, onEditTit
       }
 
       const newTag = EditorShortcut(text);
-      if (compareName(parentNode.nodeName, "DIV")) {
+      if (compareName(parentNode.nodeName, 'DIV')) {
         if (newTag) {
-          newTag.innerHTML = "<br>";
+          newTag.innerHTML = '<br>';
 
           e.preventDefault();
 
-          parentNode.innerHTML = "";
+          parentNode.innerHTML = '';
           parentNode.appendChild(newTag);
 
           selection.selectAllChildren(newTag);
@@ -125,9 +125,9 @@ export default function Editor({ $target, initialState, onEditContent, onEditTit
       onEditContent(nextState);
     });
 
-    $childDocuments.addEventListener("click", (e) => {
+    $childDocuments.addEventListener('click', (e) => {
       const { target } = e;
-      const clickElement = target.closest(".editor__child-document");
+      const clickElement = target.closest('.editor__child-document');
 
       if (clickElement) {
         const documentId = clickElement.dataset.id;

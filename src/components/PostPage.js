@@ -1,16 +1,16 @@
-import PostHeader from "./PostHeader.js";
-import PostList from "./PostList.js";
-import AddPostButton from "./AddPostButton.js";
-import MenuButton from "./MenuButton.js";
-import { fetchAddDocument, fetchGetDocuments, fetchRemoveDocument, fetchRootDocument, X_USERNAME } from "../util/api.js";
-import { watchTitleChange } from "../util/custom.js";
-import { push } from "../util/router.js";
-import { SELECTED_DOCUMENT, setItem } from "../util/storage.js";
-import { createElement, addClass } from "../util/helper.js";
+import PostHeader from './PostHeader.js';
+import PostList from './PostList.js';
+import AddPostButton from './AddPostButton.js';
+import MenuButton from './MenuButton.js';
+import { fetchAddDocument, fetchGetDocuments, fetchRemoveDocument, fetchRootDocument, X_USERNAME } from 'util/api.js';
+import { watchTitleChange } from 'util/custom.js';
+import { push } from 'util/router.js';
+import { SELECTED_DOCUMENT, setItem } from 'util/storage.js';
+import { createElement, addClass } from 'util/helper.js';
 
 export default function PostPage({ $target, initialState = [] }) {
-  const $sidebar = createElement("div", "sidebar");
-  const $ul = createElement("ul", "post__items");
+  const $sidebar = createElement('div', 'sidebar');
+  const $ul = createElement('ul', 'post__items');
 
   this.state = initialState;
 
@@ -23,12 +23,12 @@ export default function PostPage({ $target, initialState = [] }) {
 
   new MenuButton({
     $target: $sidebar,
-    className: "menu__button-close",
-    iconClass: "fa-solid fa-angles-left",
+    className: 'menu__button-close',
+    iconClass: 'fa-solid fa-angles-left',
     onClickButton: () => {
-      const $editorContainer = document.querySelector(".editor__container");
-      addClass($sidebar, "hide");
-      addClass($editorContainer, "hide");
+      const $editorContainer = document.querySelector('.editor__container');
+      addClass($sidebar, 'hide');
+      addClass($editorContainer, 'hide');
     },
   });
 

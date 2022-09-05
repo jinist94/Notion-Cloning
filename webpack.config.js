@@ -15,6 +15,13 @@ module.exports = (_, argv) => {
       publicPath: '/',
       // clean: true,
     },
+    resolve: {
+      alias: {
+        components: path.resolve(__dirname, 'src/components'),
+        util: path.resolve(__dirname, 'src/util'),
+      },
+      extensions: ['.js'],
+    },
     devServer: {
       static: './',
       port: 3000,

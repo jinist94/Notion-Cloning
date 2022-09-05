@@ -1,10 +1,10 @@
-import { createElement } from "../util/helper.js";
+import { createElement } from 'util/helper.js';
 
 export default function AddDocumentButton({ $target, addRootDocument }) {
-  const $button = createElement("button", "post__add-button");
+  const $button = createElement('button', 'post__add-button');
   $target.appendChild($button);
 
   $button.innerHTML = `<i class="fa-solid fa-plus"></i>페이지 추가`;
 
-  $button.addEventListener("click", addRootDocument);
+  $button.addEventListener('click', addRootDocument);
 }

@@ -1,14 +1,14 @@
-import PostEditePage from "./PostEditePage.js";
-import PostPage from "./postPage.js";
-import { inItRouter, push } from "../util/router.js";
-import { fetchGetDocument } from "../util/api.js";
-import { OPEN_LIST, removeItem, SELECTED_DOCUMENT, setItem } from "../util/storage.js";
+import PostEditePage from 'components/PostEditePage.js';
+import PostPage from 'components/postPage.js';
+import { inItRouter, push } from 'util/router.js';
+import { fetchGetDocument } from 'util/api.js';
+import { OPEN_LIST, removeItem, SELECTED_DOCUMENT, setItem } from 'util/storage.js';
 
 export default function App({ $target }) {
   const initialEditorState = {
-    id: "",
-    title: "",
-    content: "",
+    id: '',
+    title: '',
+    content: '',
   };
 
   const postPage = new PostPage({
@@ -24,17 +24,17 @@ export default function App({ $target }) {
   this.route = async () => {
     const { pathname } = window.location;
 
-    if (pathname === "/") {
+    if (pathname === '/') {
       postEditPage.setState(initialEditorState);
       setItem(SELECTED_DOCUMENT, null);
       return;
     }
-    if (pathname.indexOf("/documents/") === 0) {
-      const [, , documentId] = pathname.split("/");
+    if (pathname.indexOf('/documents/') === 0) {
+      const [, , documentId] = pathname.split('/');
       const document = await fetchGetDocument(documentId);
       setItem(SELECTED_DOCUMENT, { id: document.id });
 
-      if (!document) return push("/");
+      if (!document) return push('/');
 
       // Editor의 하위 document클릭 시 select를 업데이트 시키기 위함.
       postPage.setState();
@@ -52,7 +52,7 @@ export default function App({ $target }) {
     removeItem(OPEN_LIST);
     removeItem(SELECTED_DOCUMENT);
 
-    window.addEventListener("popstate", this.route);
+    window.addEventListener('popstate', this.route);
   };
 
   this.init();
