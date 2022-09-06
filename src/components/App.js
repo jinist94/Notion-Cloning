@@ -49,7 +49,6 @@ export default function App({ $target }) {
     inItRouter(this.route);
 
     // 새로고침 시 local Storage 초기화
-    removeItem(OPEN_LIST);
     removeItem(SELECTED_DOCUMENT);
 
     window.addEventListener('popstate', this.route);
